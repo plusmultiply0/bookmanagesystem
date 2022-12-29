@@ -1,0 +1,135 @@
+import click
+from libraryms import app,db
+from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem
+
+#python shell上下文
+@app.shell_context_processor
+def make_shell_context():
+    return dict(db=db,normalusr=normalusr,adminusr=adminusr,usrinfo=usrinfo,usridea=usridea,bookitem=bookitem,bookCollect=bookCollect,bookBorrow=bookBorrow,bookBorrowHistory=bookBorrowHistory,booknewitem=booknewitem)
+
+# 初始化数据库，建表
+@app.cli.command()
+@click.option('--drop', is_flag=True, help='Create after drop.')
+def initdb(drop):
+    """Initialize the database."""
+    if drop:
+        click.confirm('This operation will delete the database, do you want to continue?', abort=True)
+        db.drop_all()
+        click.echo('Drop tables.')
+    db.create_all()
+    click.echo('Initialized database.')
+
+# 往表中插入初始数据
+@app.cli.command()
+def build():
+    """Generate prepared messages."""
+    click.echo('Working...')
+    # 插入数据
+    m1 = normalusr(username='zjc',password='123456')
+    m2 = adminusr(username='zzc', password='123456')
+    db.session.add(m1)
+    db.session.add(m2)
+
+    # 测试用户数据
+    m1 = normalusr(username='test', password='123456')
+    db.session.add(m1)
+    m11 = usrinfo(username='test', tel='13318112345', sex='男性',intro='我是一名学生2333')
+    db.session.add(m11)
+    m1 = normalusr(username='abc', password='123456')
+    db.session.add(m1)
+    m11 = usrinfo(username='abc', tel='13111111111', sex='女性', intro='我是一名研究僧666')
+    db.session.add(m11)
+    m1 = normalusr(username='赵怀真', password='123456')
+    db.session.add(m1)
+    m11 = usrinfo(username='赵怀真', tel='17416666666', sex='女性', intro='我爱读书999')
+    db.session.add(m11)
+    m1 = normalusr(username='沈梦溪', password='123456')
+    db.session.add(m1)
+    m11 = usrinfo(username='沈梦溪', tel='19881776166', sex='男性', intro='我不是一名商人111')
+    db.session.add(m11)
+    # 用户收藏数据
+    m = bookCollect(username='沈梦溪',isbn='9787544258609')
+    db.session.add(m)
+    m = bookCollect(username='赵怀真', isbn='9787532183562')
+    db.session.add(m)
+    m = bookCollect(username='abc', isbn='9787229153809')
+    db.session.add(m)
+    m = bookCollect(username='test', isbn='9787513338288')
+    db.session.add(m)
+    m = bookCollect(username='zjc', isbn='9787536484276')
+    db.session.add(m)
+    # 用户借阅数据
+    m1 = bookBorrow(name='白夜行',borrowusr='zjc',borrownum=1,borrowdate='2022-12-28',shouldreturndate='2023-01-28')
+    m2 = bookBorrowHistory(name='白夜行',borrowusr='zjc',borrowdate='2022-12-28',returndate='')
+    db.session.add(m1)
+    db.session.add(m2)
+    m1 = bookBorrow(name='球状闪电', borrowusr='test', borrownum=1, borrowdate='2022-12-27', shouldreturndate='2023-01-27')
+    m2 = bookBorrowHistory(name='球状闪电', borrowusr='test', borrowdate='2022-12-27', returndate='')
+    db.session.add(m1)
+    db.session.add(m2)
+    m1 = bookBorrow(name='无人生还', borrowusr='赵怀真', borrownum=1, borrowdate='2022-12-26', shouldreturndate='2023-01-26')
+    m2 = bookBorrowHistory(name='无人生还', borrowusr='赵怀真', borrowdate='2022-12-26', returndate='')
+    db.session.add(m1)
+    db.session.add(m2)
+    m1 = bookBorrow(name='海葵', borrowusr='沈梦溪', borrownum=1, borrowdate='2022-12-27', shouldreturndate='2023-01-27')
+    m2 = bookBorrowHistory(name='海葵', borrowusr='沈梦溪', borrowdate='2022-12-27', returndate='')
+    db.session.add(m1)
+    db.session.add(m2)
+
+    # 常用用户数据
+    m11 = usrinfo(username='zjc', tel='13512345678', sex='男性')
+    m21 = usrinfo(username='zzc', tel='13887654321', sex='女性')
+    db.session.add(m11)
+    db.session.add(m21)
+    mzjc1 = usridea(username='zjc',text='这是一个想法1')
+    mzjc2 = usridea(username='zjc', text='这是一个想法2')
+    mzjc3 = usridea(username='zjc', text='这是一个想法3')
+    mzzc1 = usridea(username='zzc', text='这是一个想法1')
+    db.session.add(mzjc1)
+    db.session.add(mzjc2)
+    db.session.add(mzjc3)
+    db.session.add(mzzc1)
+    db.session.commit()
+    # 新建图书数据
+    b = booknewitem(name='德尔塔的悲剧', author='[日] 浦贺和宏', publish='四川文艺出版社', isbn='9787541164323', price='45.00', number=7, intro='十岁的少年山田信介溺死在公园的水池里，被当作意外落水处理。曾经欺负山田信介的斋木、丹治、绪川三人组生怕惹上嫌疑卷入事件中，从此逐渐疏远。十年后，在死者的忌日这天，三个人也迎来了成人之日，一个自称信介童年好友的神秘男子出现在他们面前，逼迫三人说出当年的真相。从这一天起，他 们将直面自己的罪行。面对男人不依不饶的追问，三人组有的冷静、有的暴躁、有的恐惧，而这时又发生了新的悲剧......', pubdate='2022-11')
+    db.session.add(b)
+    b = booknewitem(name='黑客与画家', author='[美] Paul Graham', publish='人民邮电出版社', isbn='9787115249494', price='49.00', number=6, intro='本书是硅谷创业之父Paul Graham 的文集，主要介绍黑客即优秀程序员的爱好和动机，讨论黑客成长、黑客对世界的贡献以及编程语言和黑客工作方法等所有对计算机时代感兴趣的人的一些话题。书中的内容不但有助于了解计算机编程的本质、互联网行业的规则，还会帮助读者了解我们这个时代，迫使读者独立思考。本书适合所有程序员和互联网创业者，也适合一切对计算机行业感兴趣的读者。', pubdate='2011-4')
+    db.session.add(b)
+    b = booknewitem(name='test', author='test', publish='test', isbn='test', price='12', number=10, intro='test', pubdate='test')
+    db.session.add(b)
+    b = booknewitem(name='狩猎愉快', author='褚盟', publish='浙江文艺出版社', isbn='9787533968724', price='68', number=5, intro='本书以通俗晓畅的语言，系统梳理了世界推理小说180年历史长河中形成的各大流派，精要介绍了各大流派代表性的作家及作品，是一部轻松幽默、普及性的推理小说简史，可谓推理小说迷的案头必备读物。', pubdate='2022-11')
+    db.session.add(b)
+    # 图书数据
+    b = bookitem(name='白夜行',author='[日] 东野圭吾',publish='南海出版公司',isbn='9787544258609',price='39.50',number=10,intro='1973年，大阪的一栋废弃建筑中发现一名遭利器刺死的男子。案件扑朔迷离，悬而未决。此后20年间，案件滋生出的恶逐渐萌芽生长，绽放出恶之花。案件相关者的人生逐渐被越来越重的阴影笼罩……“我的天空里没有太阳，总是黑夜，但并不暗，因为有东西代替了太阳。虽然没有太阳那么明亮，但对我来说已经足够。凭借着这份光，我便能把黑夜当成白天。我从来就没有太阳，所以不怕失去。”“只希望能手牵手在太阳下散步”，这句象征本书故事内核的绝望念想，有如一个美丽的幌子，随着无数凌乱、压抑、悲凉的事件片段如纪录片一样一一还原，最后一丝温情也被完全抛弃，万千读者在一曲救赎罪恶的爱情之中悲切动容。',pubdate='2013-1-1')
+    db.session.add(b)
+    b = bookitem(name='海边的卡夫卡', author='[日]村上春树', publish='上海译文出版社', isbn='9787532777617', price='59.00', number=5, intro='本书是村上春树仅次于《挪威的森林》的重要长篇小说，以其独特风格的两条平行线展开。一条平行线是少年“田村卡夫卡”，为了挣脱“你要亲手杀死父亲，与母亲乱伦”的诅咒，离开家乡投入成人世界。此后父亲在家被杀，他却疑心自己是在睡梦中杀父。他在一座旧图书馆遇到一位50岁的优雅女性，梦中却与这位女性的少女形象交合，而这位女性又可能是他的生母。一条平行线是一名失忆老人中田，因为一桩离奇的杀人事件走上逃亡之路，在汽车司机星野的帮助下恢复了遥远的战争记忆。', pubdate='2018-8' )
+    db.session.add(b)
+    b = bookitem(name='大医·破晓篇', author='马伯庸', publish='上海文艺出版社', isbn='9787532183562', price='108.00', number=7, intro='《大医·破晓篇》是马伯庸2022年全新长篇历史小说。挽亡图存、强国保种，这是医者在清末变局中的一声呐喊。大医若史，以济世之仁心，见证大时代的百年波澜。一个在日俄战争中死里逃生的东北少年、一个在伦敦公使馆里跑腿的广东少年、一个不肯安享富贵的上海少女——这三个出身、性格、 际遇各不相同的年轻人，在一九一〇年这一个关键节点，同时踏入了中国红十字会总医院，开始了他们纠葛一生的医海生涯。作为中国第一代公共慈善医生，三个人身上肩负的责任比普通医生更加沉重。哪里有疫情，就要去哪里治疫；哪里有灾害，就要去哪里救灾；哪里爆发战争，就要去哪里冒着枪林弹雨，救死扶伤。上海鼠疫、皖北水灾、武昌起义……晚清时局的跌宕起伏，无时无刻不牵扯着三人的命运。他们相互扶持，从三个蒙昧天真的少年，逐渐成长为三名出色的医生，在一次次救援中感悟到，何为真正的“大医”。', pubdate='2022-9' )
+    db.session.add(b)
+    b = bookitem(name='球状闪电', author='刘慈欣', publish='四川科学技术出版社', isbn='9787536484276', price='25.00', number=8, intro='某个离奇的雨夜，一个球状闪电闯进了少年的视野，并在一瞬间将少年的父母化为灰烬。少年毕其一生去解开那个将他变成孤儿的自然之谜。但未曾想，多年后，他的研究被纳入“新概念武器”开发计划，他所追寻的球状闪电变成了下一场战争中决定祖国生存或是灭亡的终武器。及锋而试，大西北戈壁滩上升起冰冷的“蓝太阳”，世界变得陌生而怪异。一个完全未知的未来，在宇宙观测者的注视下，降临在人类面前……', pubdate='2016-9')
+    db.session.add(b)
+    b = bookitem(name='海葵', author='贝客邦', publish='重庆出版社', isbn='9787229153809', price='49.00', number=5, intro='三线叙述的悬疑故事，一面是神秘失踪的儿童，一面是藏尸和冒领退休金的房客，还有熟睡中被性侵的女房东，三线并行。冬至清晨，杨远九岁的儿子在楼梯间消失无踪，不知缘由。经过民警多方查探，最终发现其曾在失踪前一刻潜入邻居家中，但不知道在那儿有何事发生。但是，可疑的邻居却有着牢不可破的不在场证明，仿佛遥控一般操纵着一场密室逃脱的魔术。某日傍晚，袁午的父亲不幸于酒后猝亡。为了冒领退休金，在经过激烈的思想斗争后，袁午决定藏匿父亲的尸体。但在此期间却遭遇了幻觉与现实交织的恐惧，而又在无意间触及了另一个谜团。独居的单身年轻女房东，在熟睡中被人性侵，醒来察觉不到任何线索。惊恐之下，赶快房屋出租，暗地里查找事情的真相，却也不敢告诉他人。儿童失踪案、藏尸冒领退休金案，还有女房东被性侵，几个看似毫不相关的案件，却相互交织纠缠在一起，相互激荡。', pubdate='2021-3')
+    db.session.add(b)
+    b = bookitem(name='如父如子', author='[日] 是枝裕和', publish='湖南文艺出版社', isbn='9787540484651', price='49.80', number=7, intro='当意识到孩 子也在注视着自 己时，那一瞬间，便懂得了什么是如父如子。至今为止都过着一帆风顺的人生的野野宮良多，是大型建筑公司里的精英社员。他和妻子绿结婚多年，感情十分要好，两人共同养育着聪明乖巧的儿子庆多。本以为平静生活将一直持续的三人没有想到的是，一通来自庆多出生医院的 电话将这个小家庭卷到了风口浪尖。面对命中注定的血缘与日夜相伴的亲情，良多骄傲又脆弱的内心摇摆不定。两个家庭站在了人生的十字路口前。分分秒秒，经年累月积淀下来的父子亲情，早已超越了血缘的羁绊。', pubdate='2018-4')
+    db.session.add(b)
+    b = bookitem(name='无人生还', author='[英] 阿加莎·克里斯蒂', publish='新星出版社', isbn='9787513338288', price='42.00', number=6, intro='十个相互陌生、身份各异的人受邀前往德文郡海岸边一座孤岛上的豪宅。客人到齐后，主人却没有出现。当晚，一个神秘的声音发出指控，分别说出每个人心中罪恶的秘密。接着，一位客人离奇死亡。暴风雨让小岛与世隔绝，《十个小士兵》——这首古老的童谣成了死亡咒语。如同歌谣中所预言的，客人一个接一个死去……杀人游戏结束后，竟无一人生还！', pubdate='2020-7')
+    db.session.add(b)
+    b = bookitem(name='余生皆假期', author='[日] 伊坂幸太郎', publish=' 新星出版社', isbn='9787513315340', price='28', number=9, intro='因父亲出轨而散伙的一家三口在即将分道扬镳时收到一条交友短信，发信人是打算从黑道退出的小混混冈田——去交一个朋友，完成这项任务，他才能成功脱身。于是，失败的父亲、神秘的母亲和青春期女儿坐上了“前黑道人士”的车，四个人要一同奔向人生的新篇章……然而敲诈勒索这种工作怎么能说不干就不干了，冈田的这封辞职信可没那么好写，更麻烦的是，刚交到的朋友怎么办？余生皆假期的梦想能实现吗？', pubdate='2015-2')
+    db.session.add(b)
+    b = bookitem(name='许三观卖血记', author='余华', publish='作家出版社', isbn='9787506365680', price='24.00', number=7, intro='《许三观卖血记》是余华1995年创作的一部长篇小说。《许三观卖血记》以博大的温情描绘了磨难中的人生，以激烈的故事形式表达了人在面对厄运时求生的欲望。小说讲述了许三观靠着卖血渡过了人生的一个个难关，战胜了命运强加给他的惊涛骇浪，而当他老了，知道自己的血再也没有人要时，精神却崩溃了。', pubdate='2012-9')
+    db.session.add(b)
+    b = bookitem(name='狼王梦', author='沈石溪', publish='浙江少年儿童出版社', isbn='9787534256301', price='18.00', number=5, intro='《狼王梦》内容简介：绝境分娩、培养黑仔、魂断捕兽夹、重塑王者品性、寄望后代、血洒碧空、被淘汰的警犬、阴差阳错进了马戏团、扮演大灰狼、鲜花和掌声不属于它、遭哈巴狗暗算、恶狼?好狗?、野外遭遇云豹等等。', pubdate='2009-10')
+    db.session.add(b)
+    b = bookitem(name='坏小孩', author='紫金陈', publish='湖南文艺出版社', isbn='9787540468422', price='54.00', number=8, intro='结婚第四年，徐静有了外遇，并向张东升提出离婚。作为上门女婿入赘的张东升，婚前有过财产公证，一旦离婚，几乎是净身出户。左思右想之后，他决定做几件事改变这个结局。筹划了近一年后，他假意带岳父母旅游，在市郊的三名山上，突然将两人推下山崖摔死。这本是他精心设计的完美的犯罪开场白，谁知，这一幕却被三个在远处玩耍的小孩，无意中用相机的摄像功能拍了下来。更让他没想到的是，这三个小孩，一点都不善良。', pubdate='2018-7-1')
+    db.session.add(b)
+    b = bookitem(name='失踪假日', author='[日] 乙一', publish='浙江人民出版社', isbn='9787213097546', price='45.00', number=9, intro='一本关于“孤独与爱” 的暖心小说，哀伤、温情、恐怖的集大成之作。哀伤、温情、恐怖、青春与邪恶的交织的推理杰作。揭露“白乙一”温柔、明亮、孤独，不为人知的另一面。“白乙一”系列纯爱之作，看乙一如何玩转治愈系推理。《幸福宝贝》他如何同亡灵共处一室，寻找重生的契机？《玛利亚的手指》我藏起她“消失”的一截手指，而杀人者究竟是谁？《失踪假日》富裕之家的少女，为何与绑架犯共枕同眠？剪下杂志上的字拼成绑架信，偷偷寄回家里。今天开始，继母的恶言相向、父亲的背叛，还有这个少了我也能继续运转的家，对我来说，都无所谓了。一月四日，天气晴，我绑架了——我自己！害怕被忘记，害怕被伤害，拒绝和外界接触的少年，每一次屏住气息的失踪，其实都是竭尽全力喊出我“其实我就在这里！”失踪，是为了被谁找回来！《失踪假日》是乙一为每位失踪者所写的寻人启事。所以要相信，无论藏得多隐密，都会有人找到你。', pubdate='2020-8')
+    db.session.add(b)
+    b = bookitem(name='明朝那些事儿·第4部', author='当年明月', publish='浙江人民出版社', isbn='9787213046308', price='29.80', number=10, intro='《明朝那些事儿》第四部上接第三部，从嘉靖即位、“议礼之争”开始。嘉靖皇帝借“议礼之争”清除了一批前朝旧臣，总揽大权。此后他的生活日渐腐化，一心想得道成仙，国家大事抛诸脑后，奸相严嵩因此得以长期把持大权。同时大明财政空虚，兵备废弛，东南沿海的倭寇和北方的蒙古成为明朝的心腹大患。因此，本书主要讲述了朝廷的权力之争和边疆的抗倭斗争。', pubdate='2011-11-1')
+    db.session.add(b)
+    b = bookitem(name='圣女的救济', author='[日] 东野圭吾', publish='南海出版公司', isbn='9787544285643', price='45.00', number=6, intro='周日晚上七点，东京某IT公司社长真柴被发现死在家中，死因是喝咖啡时砒霜中毒。当天早上，真柴还和情人一起喝过咖啡、用过水壶，并约好共进晚餐。真柴家除了二楼的一扇小窗开着，其余门窗都从内反锁。案发时，妻子远在千里之外的北海道娘家，情人在文化学校教拼布，现场没有其他人出入过的痕迹。真柴没有丝毫自杀的理由，也找不到任何他杀证据。“神探伽利略”汤川学遇到了比《嫌疑人X的献身》更难破解的谜局：“这种事情只在理论上可行，现实中几乎不可能做到。你们警方恐怕会输，而我也无法获胜。”', pubdate='2017-1-1')
+    db.session.add(b)
+    # b = bookitem(name=, author=, publish=, isbn=, price=, number=, intro=, pubdate=)
+    # db.session.add(b)
+
+    db.session.commit()
+    click.echo('ok!')
