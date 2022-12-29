@@ -1,0 +1,85 @@
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  /* background-color: bisque; */
+  /* background-image: url("./../public/loginbg.jfif"); */
+  /* filter: blur(6px); */
+  /* flex-direction: column; */
+  /* opacity: 0.5; */
+  position: relative;
+  z-index: 0;
+}
+/* 设置图片透明度 */
+.form::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: url("./../public/loginbg.jfif");
+  z-index: -1;
+  opacity: .7;
+}
+
+.loginform{
+  width: 320px;
+  height: 340px;
+  padding: 36px;
+  margin-top: -200px;
+  background-color: white;
+  /* opacity: 0.9; */
+}
+
+.registerbutton{
+  margin-left: 100px;
+}
+
+.registerform{
+  margin-top: -200px;
+  background-color: white;
+  padding-right: 20px;
+  padding-top: 20px;
+}
+
+/* 调节主页的两个按钮 */
+#homelogin,#homeregister{
+  padding-left: 100px;
+  padding-right: 100px;
+}
+#homeregister{
+  margin-top: 150px;
+}
+
+.mainpage{
+  height: 100%;
+}
+
+.newbook,.exportBook{
+  margin-left: 20px;
+}
+
+.ideainput{
+  width: 500px;
+}
+
+.ideabutton{
+  margin-left: 450px;
+}
+.idealist{
+  width: 60%;
+}
+
+.header{
+  display: flex;
+  justify-content: space-between;
+}
+
+.loginalert,.registeralert{
+  position: absolute;
+  top: 10%;
+  left: 50%; 
+  transform: translate(-50%,-50%);
+}
