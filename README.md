@@ -41,46 +41,46 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 登录及注册页
 
-![](screenshot\login.png)
+![](screenshot/login.png)
 
-![](screenshot\register.png)
+![](screenshot/register.png)
 
 主页面
 
-![](screenshot\index.png)
+![](screenshot/index.png)
 
 收藏页
 
-![](screenshot\collect.png)
+![](screenshot/collect.png)
 
 借阅页面
 
-![](screenshot\borrow.png)
+![](screenshot/borrow.png)
 
-![](screenshot\borrowhistory.png)
+![](screenshot/borrowhistory.png)
 
 个人信息页
 
-![](screenshot\self.png)
+![](screenshot/self.png)
 
 无权限访问管理员页面
 
-![](screenshot\self2.png)
+![](screenshot/self2.png)
 
 管理员页面
 
 书籍信息审核
 
-![](screenshot\admin1.png)
+![](screenshot/admin1.png)
 
 编辑删除查看书籍信息
 
-![](screenshot\admin2.png)
+![](screenshot/admin2.png)
 
 查看编辑删除所有普通用户
 
-![](screenshot\admin3.png)
+![](screenshot/admin3.png)
 
 查看所有用户收藏和借阅信息
 
-![](screenshot\admin4.png)
+![](screenshot/admin4.png)
