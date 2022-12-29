@@ -37,7 +37,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 起始页
 
-![](screenshot\1.png)
+![](screenshot/1.png)
 
 登录及注册页
 
