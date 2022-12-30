@@ -85,3 +85,14 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 查看所有用户收藏和借阅信息
 
 ![](screenshot/admin4.png)
+
+## 参考资料
+
+- https://ant.design/components/overview-cn
+- https://fullstackopen.com/zh/#course-contents
+- https://reactrouter.com/en/main/start/overview
+
+- https://github.com/JeffDing99/books
+- https://github.com/zhanghuanhao/LibrarySystem
+- https://github.com/plusmultiply0/db-big-assignment
+
