@@ -5,8 +5,6 @@ class normalusr(db.Model):
     nid=db.Column(db.Integer,primary_key=True,nullable=False,autoincrement=True)
     username=db.Column(db.String(30))
     password=db.Column(db.String(30))
-    # 用户与个人信息一对一
-    # usrinf = db.relationship('usrinfo',back_populates='usr',uselist=False)
 
 # 管理员表
 class adminusr(db.Model):
@@ -21,8 +19,6 @@ class usrinfo(db.Model):
     tel=db.Column(db.String(30))
     sex=db.Column(db.String(30))
     intro=db.Column(db.String(300))
-    # usr_id = db.Column(db.Integer,db.ForeignKey('normalusr.nid'))
-    # usr = db.relationship('normalusr',back_populates='usrinf')
 
 # 用户想法表
 class usridea(db.Model):
