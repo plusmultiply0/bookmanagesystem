@@ -1,20 +1,19 @@
 import { useState } from "react";
-import { Form, Button, AutoComplete } from "antd";
+
 import { Link, Outlet, useLocation, Navigate } from "react-router-dom";
 
 import React from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined, BookOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { LaptopOutlined, UserOutlined, BookOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme, Dropdown } from 'antd';
 
 // 导入图书数据
-import {bookdata,columns} from "./bookdata";
-import { Input, Space, Table, Typography } from 'antd';
 
-const { Search } = Input;
+import {Space,Typography } from 'antd';
+
 const { Title } = Typography;
 
 const Home = ()=>{
-    const [isLogin,setLogin] = useState(true)
+    
     return(
         <MainPage/>
     );
@@ -75,8 +74,6 @@ const MainPage = () => {
     return (
         <Layout className="mainpage">
             <Header className="header">
-                {/* <div className="logo" /> */}
-                {/* <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items1} /> */}
                 <Title level={3} type="success" className="wetitle">图书管理系统</Title>
                 <LoginStatus/>
             </Header>
@@ -85,12 +82,6 @@ const MainPage = () => {
                     width={200}
                     style={{
                         background: colorBgContainer,
-                        // position: 'fixed',
-                        // overflow: 'auto',
-                        // height: '100vh',
-                        // left: 0,
-                        // top: '10vh',
-                        // bottom: 0,
                     }}
                 >
                     <Menu
@@ -107,7 +98,6 @@ const MainPage = () => {
                 <Layout
                     style={{
                         padding: '0 24px 24px',
-                        // marginLeft: 200,
                     }}
                 >
                     {/* 面包屑 */}
@@ -123,7 +113,6 @@ const MainPage = () => {
                             padding: 24,
                             margin: 0,
                             minHeight: 280,
-                            // height: '100%',
                             background: colorBgContainer,
                             overflow: 'auto',
                         }}
@@ -147,12 +136,8 @@ const MainPage = () => {
 const LoginStatus = ()=>{
     const [isLogin,setLogin]=useState(true)
 
-    const onclick = ()=>{
-        setLogin(false)
-    }
-
     const handleClick = ()=>{
-        console.log('delete ok!')
+        // console.log('delete ok!')
         window.localStorage.removeItem('loggedUser')
         window.localStorage.removeItem('loggedToken')
         if (window.localStorage.getItem('admin')){

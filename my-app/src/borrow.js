@@ -124,9 +124,9 @@ const Return = (props) => {
             borrownum: 1,
             returndate: getCurrentTime(false)
         }
-        console.log(newValue)
+        // console.log(newValue)
         const res1 = await uniPost('http://127.0.0.1:5000/toreturn', newValue)
-        console.log('res1', res1)
+        // console.log('res1', res1)
         openNotificationWithIcon(isReturn ? 'success' : 'error')
 
         setTimeout(() => { window.location.reload() }, 3000)
@@ -158,7 +158,7 @@ const BorrowList = ()=>{
             params: res
         }).then(response => {
             const data = response.data
-            console.log(data)
+            // console.log(data)
             setBorrowData(data)
         })
     }, [])
@@ -240,7 +240,7 @@ const BorrowHistory = ()=>{
             params: res
         }).then(response => {
             const data = response.data
-            console.log(data)
+            // console.log(data)
             setBorrowHistoryData(data)
         })
     }, [])

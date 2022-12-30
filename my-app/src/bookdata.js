@@ -99,9 +99,9 @@ const Borrow = (props)=>{
             borrowdate:getCurrentTime(false),
             shouldreturndate: getCurrentTime(true)
         }
-        console.log(newValue)
+        // console.log(newValue)
         const res1 = await uniPost('http://127.0.0.1:5000/toborrow', newValue)
-        console.log('res1', res1)
+        // console.log('res1', res1)
 
         openNotificationWithIcon(isBorrow ? 'success' : 'error')
     }
@@ -135,11 +135,11 @@ const Collect = (props)=>{
 
         const res1 = await uniPost('http://127.0.0.1:5000/tocollect',newValue)
         
-        console.log('res1',res1)
+        // console.log('res1',res1)
         // 这里状态滞后更新，非取反isCollect为真实状态
         messageApi.info(!isCollect ? '收藏成功！' : '取消成功！') 
-        console.log(data.isbn)
-        console.log(isCollect)
+        // console.log(data.isbn)
+        // console.log(isCollect)
     };
 
     return (
@@ -176,22 +176,22 @@ const BookList = ()=>{
         }, 2000);
         const formValues = form.getFieldsValue();
 
-        console.log('form', formValues)
+        // console.log('form', formValues)
 
         const res1 = await uniPost('http://127.0.0.1:5000/toaddnewbook', formValues)
-        console.log('res1', res1)
+        // console.log('res1', res1)
         
     };
     const handleCancel = () => {
-        console.log('Clicked cancel button');
+        // console.log('Clicked cancel button');
         setOpen(false);
     };
 
     useEffect(()=>{
-        console.log('effect')
+        // console.log('effect')
         axios.get(baseUrl).then(response => {
             const data = response.data
-            console.log(data)
+            // console.log(data)
             setBookData(data)
             setSaveData(data)
         })
@@ -202,10 +202,10 @@ const BookList = ()=>{
         console.log(value);
         if (value) {
             const filterdata = bookData.filter(item => {
-                console.log(item.value)
+                // console.log(item.value)
                 return item.name.includes(value)
             })
-            console.log(filterdata)
+            // console.log(filterdata)
             setBookData(filterdata)
         } else {
             setBookData(savedata)

@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Alert, Space } from 'antd';
+import { Button, Checkbox, Form, Input, Alert} from 'antd';
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -11,7 +11,6 @@ const LoginForm = () => {
 
     const [isAlertShow, setAlertShow] = useState(false)
     const [islogged,setlogged] = useState(false)
-    // const [messageAlert, setmessageAlert] = useState('')
 
     // 登录post函数
     const ifLogin = async res =>{
@@ -21,11 +20,11 @@ const LoginForm = () => {
     }
     // 登录函数
     const onFinish = async (values) => {
-        console.log('Received values of form: ', values);
+        // console.log('Received values of form: ', values);
         try{
             const res1 = await ifLogin(values)
-            console.log('res1:',res1)
-            console.log(res1.access_token)
+            // console.log('res1:',res1)
+            // console.log(res1.access_token)
             setlogged(true)
             window.localStorage.setItem('loggedToken', res1.access_token)
             window.localStorage.setItem('loggedUser',values.username)
@@ -33,9 +32,9 @@ const LoginForm = () => {
                 window.localStorage.setItem('admin', true)
             }
         } catch (exception){
-            console.log(exception)
+            // console.log(exception)
             
-            console.log(exception.response.data)
+            // console.log(exception.response.data)
             setAlertShow(true)
             setTimeout(()=>{setAlertShow(false)},3000)
         }

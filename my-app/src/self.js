@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Badge, Descriptions, Button, Modal, Form, Input, Typography, List, Skeleton, Result, Space } from 'antd';
-import { CloseCircleOutlined } from '@ant-design/icons';
+import { Descriptions, Button, Modal, Form, Input, Typography, List, Skeleton} from 'antd';
+
 import axios from 'axios'
 
 const selfdata = [
@@ -27,7 +27,7 @@ const list = [
 ]
 
 const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+const { Title} = Typography;
 
 const baseUrl = 'http://127.0.0.1:5000/selfdata'
 
@@ -104,14 +104,14 @@ const EditSelf = (props)=>{
             tel:infoTel?infoTel:data.tel,
             intro:infoMsg?infoMsg:data.intro
         }
-        console.log(newValues)
+        // console.log(newValues)
         // 更改本地信息
         handleInfo(newValues)
          
         setIsModalOpen(false);
         // 更改服务器端信息
         const res1 = await uniPost(newValues)
-        console.log('res1:', res1)
+        // console.log('res1:', res1)
     };
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -175,16 +175,16 @@ const EditPwd = ()=>{
     const handleOk = async() => {
         console.log({ firstPwd, secondPwd })
         if (firstPwd == secondPwd){
-            console.log('same,ok!')
+            // console.log('same,ok!')
             const self = window.localStorage.getItem('loggedUser')
             const newValues = {
                 "username": self,
                 "password":secondPwd,
                 "isadmin": window.localStorage.getItem('admin')
             }
-            console.log(newValues)
+            // console.log(newValues)
             const res1 = await uniPost(newValues)
-            console.log('res1:', res1)
+            // console.log('res1:', res1)
         }
         setIsModalOpen(false);
     };
@@ -289,11 +289,11 @@ const IdeaRelease = ()=>{
         }
         setIdeaList([newValue, ...ideaList])
         setIdeaText('')
-        console.log([newValue, ...ideaList])
+        // console.log([newValue, ...ideaList])
 
         // 发送新想法至服务器
         const res1 = await uniPost(newValue)
-        console.log('addidea:', res1)
+        // console.log('addidea:', res1)
     }
 
     const delideaUrl = 'http://127.0.0.1:5000/delideas'
@@ -308,7 +308,7 @@ const IdeaRelease = ()=>{
         setIdeaList([])
         const self = window.localStorage.getItem('loggedUser')
         const res = await delPost({username:self})
-        console.log('delidea:', res)
+        // console.log('delidea:', res)
     }
 
     // 获取用户信息
@@ -316,13 +316,13 @@ const IdeaRelease = ()=>{
     const res = { "username": self }
     const ideaUrl = 'http://127.0.0.1:5000/selfidea'
     useEffect(() => {
-        console.log('idea info')
+        // console.log('idea info')
         axios.get(ideaUrl, {
             params: res
         }).then(response => {
             const data = response.data
             setIdeaList(data)
-            console.log('ideainfo:', data)
+            // console.log('ideainfo:', data)
         })
     }, [])
     //只在第一次渲染时运行
@@ -359,9 +359,7 @@ const IdeaRelease = ()=>{
             <Button onClick={handleDel}>全部删除</Button>
             <List
                 className="idealist"
-                // loading={initLoading}
                 itemLayout="horizontal"
-                // loadMore={loadMore}
                 dataSource={ideaList}
                 renderItem={(item) => (
                     <List.Item>

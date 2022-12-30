@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Badge, Descriptions, Button, Modal, Form, Input, Typography, List, Skeleton, Result, Space, Table, notification } from 'antd';
-import { CloseCircleOutlined } from '@ant-design/icons';
+import { Button, Modal, Form, Input, Typography, Result, Space, Table, notification } from 'antd';
+
 import axios from 'axios'
 
 import { Detail } from './bookdata'
 
 const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+const { Title} = Typography;
 
 const columns = [
     {
@@ -109,12 +109,12 @@ const InfoCheck = () => {
         console.log('effect')
         axios.get('http://127.0.0.1:5000/bookdata').then(response => {
             const data = response.data
-            console.log('data:', data)
+            // console.log('data:', data)
             setBookData(data)
         })
         axios.get('http://127.0.0.1:5000/newbookdata').then(response => {
             const data = response.data
-            console.log('new book data:', data)
+            // console.log('new book data:', data)
             setNewBookData(data)
         })
 
@@ -152,10 +152,10 @@ const DelBook = (props) => {
             name: data.name,
             isbn:data.isbn,
         }
-        console.log('new value', values)
+        // console.log('new value', values)
 
         const res1 = await uniPost('http://127.0.0.1:5000/delbook', values)
-        console.log('res1', res1)
+        // console.log('res1', res1)
 
         openNotificationWithIcon('success')
 
@@ -177,9 +177,6 @@ const EditBook = (props) => {
 
     const [form] = Form.useForm();
 
-    const [bookname, setbookname] = useState(data.name)
-    // console.log(data.name)
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
         setIsModalOpen(true);
@@ -196,10 +193,10 @@ const EditBook = (props) => {
             intro: form.getFieldValue('intro') ? form.getFieldValue('intro') : data.intro,
         }
         // const formvalues = form.getFieldsValue()
-        console.log('new value', newValues)
+        // console.log('new value', newValues)
 
         const res1 = await uniPost('http://127.0.0.1:5000/toeditbook', newValues)
-        console.log('res1', res1)
+        // console.log('res1', res1)
 
         setIsModalOpen(false);
 
@@ -275,10 +272,10 @@ const OkNewBook = (props) => {
             name: data.name,
             action: 'ok'
         }
-        console.log('new value', values)
+        // console.log('new value', values)
 
         const res1 = await uniPost('http://127.0.0.1:5000/newbookaction', values)
-        console.log('res1', res1)
+        // console.log('res1', res1)
 
         openNotificationWithIcon('success')
 
@@ -311,10 +308,10 @@ const DelNewBook = (props) => {
             name: data.name,
             action: 'no'
         }
-        console.log('new value', values)
+        // console.log('new value', values)
 
         const res1 = await uniPost('http://127.0.0.1:5000/newbookaction', values)
-        console.log('res1', res1)
+        // console.log('res1', res1)
 
         openNotificationWithIcon('success')
 
@@ -336,7 +333,7 @@ const DelNewBook = (props) => {
 const ReaderManage = () => {
     const admin = window.localStorage.getItem('admin')
     const [isAdmin, setAdmin] = useState(admin)
-    console.log(isAdmin)
+    // console.log(isAdmin)
 
     const [usrdata, setUsrData] = useState([])
     const [usrcollectdata, setUsrCollectData] = useState([])
@@ -346,17 +343,17 @@ const ReaderManage = () => {
         console.log('effect')
         axios.get('http://127.0.0.1:5000/usrdata').then(response => {
             const data = response.data
-            console.log('data:', data)
+            // console.log('data:', data)
             setUsrData(data)
         })
         axios.get('http://127.0.0.1:5000/usrcollectdata').then(response => {
             const data = response.data
-            console.log('collect data:', data)
+            // console.log('collect data:', data)
             setUsrCollectData(data)
         })
         axios.get('http://127.0.0.1:5000/usrborrowdata').then(response => {
             const data = response.data
-            console.log('borrow data:', data)
+            // console.log('borrow data:', data)
             setUsrBorrowData(data)
         })
 
@@ -432,10 +429,10 @@ const Delusr = (props)=>{
         const newValues = {
             username: data.username,
         }
-        console.log('new value', newValues)
+        // console.log('new value', newValues)
 
         const res1 = await uniPost('http://127.0.0.1:5000/todelusr', newValues)
-        console.log('res1', res1)
+        // console.log('res1', res1)
 
         openNotificationWithIcon('success')
 
@@ -453,7 +450,7 @@ const Delusr = (props)=>{
 }
 const Editusr = (props)=>{
     const data = props.data
-    console.log(data)
+    // console.log(data)
 
     const [form] = Form.useForm();
 
@@ -468,10 +465,10 @@ const Editusr = (props)=>{
             tel: form.getFieldValue('tel') ? form.getFieldValue('tel') : data.tel,
             intro: form.getFieldValue('intro') ? form.getFieldValue('intro') : data.intro,
         }
-        console.log('new value',newValues)
+        // console.log('new value',newValues)
 
         const res1 = await uniPost('http://127.0.0.1:5000/toeditusr',newValues)
-        console.log('res1',res1)
+        // console.log('res1',res1)
         
         setIsModalOpen(false);
 
@@ -566,13 +563,7 @@ const PermissionError = () => {
         <Result
             status="error"
             title="权限错误！"
-            subTitle="请检查自身的权限设置！"
-        // extra={[
-        //     <Button type="primary" key="console">
-        //         Go Console
-        //     </Button>,
-        //     <Button key="buy">Buy Again</Button>,
-        // ]}
+            subTitle="请检查自身的权限设置！" 
         >
         </Result>
     );

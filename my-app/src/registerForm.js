@@ -7,7 +7,7 @@ import {
     Select, Alert, Result
 } from 'antd';
 import axios from 'axios';
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -60,10 +60,10 @@ const RegisterForm = () => {
         console.log('Received values of form: ', values);
         try{
             const res1 = await ifRegister(values)
-            console.log('res1:', res1)
+            // console.log('res1:', res1)
             setRegister(true)
         }catch(exception){
-            console.log(exception)
+            // console.log(exception)
             setAlertShow(true)
             setTimeout(() => { setAlertShow(false) }, 3000)
         }

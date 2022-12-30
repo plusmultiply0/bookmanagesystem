@@ -145,12 +145,12 @@ const CollectList = ()=>{
     const res = { "username": self }
 
     useEffect(() => {
-        console.log('effect')
+        // console.log('effect')
         axios.get(baseUrl, {
             params: res
         }).then(response => {
             const data = response.data
-            console.log(data)
+            // console.log(data)
             setcollectdata(data)
             setsavedata(data)
         })
@@ -176,14 +176,14 @@ const CollectList = ()=>{
     }
 
     const onSearch = (value) => {
-        console.log(value);
+        // console.log(value);
         
         if(value){
             const filterdata = collectdata.filter(item => {
-                console.log(item.value)
+                // console.log(item.value)
                 return item.name.includes(value)
             })
-            console.log(filterdata)
+            // console.log(filterdata)
             setcollectdata(filterdata)
         }else{
             setcollectdata(savedata)
