@@ -47,6 +47,10 @@ def build():
     db.session.add(m1)
     m11 = usrinfo(username='沈梦溪', tel='19881776166', sex='男性', intro='我不是一名商人111')
     db.session.add(m11)
+    m1 = normalusr(username='asd', password='123456')
+    db.session.add(m1)
+    m11 = usrinfo(username='asd', tel='19217744333', sex='男性', intro='我是测试账号！')
+    db.session.add(m11)
     # 用户收藏数据
     m = bookCollect(username='沈梦溪',isbn='9787544258609')
     db.session.add(m)

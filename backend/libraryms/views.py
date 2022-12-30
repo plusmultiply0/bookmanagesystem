@@ -439,6 +439,15 @@ def delbook():
     res1 = bookitem.query.filter(bookitem.isbn == isbn).first()
     print(res1.name)
     db.session.delete(res1)
+    res2 = bookBorrowHistory.query.filter(bookBorrowHistory.name == name).all()
+    for x in res2:
+        db.session.delete(x)
+    res3 = bookBorrow.query.filter(bookBorrow.name == name).all()
+    for x in res3:
+        db.session.delete(x)
+    res4 = bookCollect.query.filter(bookCollect.isbn == isbn).all()
+    for x in res4:
+        db.session.delete(x)
     db.session.commit()
     return jsonify({"msg": "delete book ok！"})
 
