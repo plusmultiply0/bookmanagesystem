@@ -59,6 +59,12 @@ const Borrow = (props)=>{
             description:isBorrow?'借阅成功！':'借阅失败！',
         });
     };
+    const openNotificationWithIconTwice = (type) => {
+        api[type]({
+            message: '通知信息：',
+            description: '借阅失败！库存数量不足！',
+        });
+    };
 
     // 获取设置时间的函数
     function zeroFill(i) {
@@ -100,10 +106,18 @@ const Borrow = (props)=>{
             shouldreturndate: getCurrentTime(true)
         }
         // console.log(newValue)
+        const zero = data.number
+        if(zero==0){
+            openNotificationWithIconTwice('error')
+            return;
+        }
+
         const res1 = await uniPost('http://127.0.0.1:5000/toborrow', newValue)
-        // console.log('res1', res1)
+        console.log('res1', res1)
 
         openNotificationWithIcon(isBorrow ? 'success' : 'error')
+
+        setTimeout(() => { window.location.reload() }, 2000)
     }
 
     return(

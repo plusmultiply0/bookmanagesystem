@@ -243,6 +243,9 @@ def toborrow():
     if hasborrow:
         print(borrowitem.name)
         borrowitem.borrownum = borrowitem.borrownum+1
+        # 库存数量-1
+        res2 = bookitem.query.filter(bookitem.name == name).first()
+        res2.number = res2.number-1
         db.session.commit()
         return jsonify({"msg": "add book num ok！"})
     # 第一次借书
@@ -306,6 +309,10 @@ def toreturn():
     for x in res2:
         if x.name == name:
             x.returndate = returndate
+    db.session.commit()
+    # 库存图书数量+1
+    res3 = bookitem.query.filter(bookitem.name == name).first()
+    res3.number = res3.number+1
     db.session.commit()
     return jsonify({"msg": "return ok！"})
 
