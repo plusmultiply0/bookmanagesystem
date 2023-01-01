@@ -125,9 +125,9 @@ const InfoCheck = () => {
         isAdmin ?
          <>
             <Title>书籍条目信息审核</Title>
-                <Table columns={newbookcolumns} dataSource={newbookdata} />
+                <Table columns={newbookcolumns} dataSource={newbookdata} locale={{ emptyText: '暂无数据' }} />
             <Title>全部书籍条目信息</Title>
-            <Table columns={columns} dataSource={bookdata} />
+                <Table columns={columns} dataSource={bookdata} locale={{ emptyText: '暂无数据' }} />
          </>
         : <PermissionError />
     );
@@ -364,11 +364,11 @@ const ReaderManage = () => {
         isAdmin ?
             <>
                 <Title>读者信息</Title>
-                <Table columns={usrcolumns} dataSource={usrdata} />
+                <Table columns={usrcolumns} dataSource={usrdata} locale={{ emptyText: '暂无数据' }} />
                 <Title>图书收藏信息</Title>
-                <Table columns={usrcollectcolumns} dataSource={usrcollectdata} />
+                <Table columns={usrcollectcolumns} dataSource={usrcollectdata} locale={{ emptyText: '暂无数据' }} />
                 <Title>图书借阅信息</Title>
-                <Table columns={usrborrowcolumns} dataSource={usrborrowdata} />
+                <Table columns={usrborrowcolumns} dataSource={usrborrowdata} locale={{ emptyText: '暂无数据' }} />
             </>
             : <PermissionError />
     );

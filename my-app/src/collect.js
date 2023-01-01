@@ -194,7 +194,7 @@ const CollectList = ()=>{
         <>
             <Search placeholder="输入书名" onSearch={onSearch} enterButton style={{ width: 200, }} />
             <Button type="primary" className="exportBook" ghost onClick={handleexport}>导出图书</Button>
-            <Table columns={collectColumns} dataSource={collectdata} />
+            <Table columns={collectColumns} dataSource={collectdata} locale={{ emptyText: '暂无数据' }} />
         </>
     );
 }

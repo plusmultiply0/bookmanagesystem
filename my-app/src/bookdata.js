@@ -278,7 +278,7 @@ const BookList = ()=>{
                     </Form.Item>
                 </Form>
             </Modal>
-            <Table columns={columns} dataSource={bookData} />
+            <Table columns={columns} dataSource={bookData} locale={{ emptyText: '暂无数据' }} />
         </>
     );
 }

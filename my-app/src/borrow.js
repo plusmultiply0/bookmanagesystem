@@ -166,7 +166,7 @@ const BorrowList = ()=>{
 
     return(
         <>
-            <Table columns={borrowColumns} dataSource={borrowdata} />
+            <Table columns={borrowColumns} dataSource={borrowdata} locale={{emptyText:'暂无数据'}}/>
         </>
     );
 }
@@ -248,7 +248,7 @@ const BorrowHistory = ()=>{
 
     return(
         <>
-            <Table columns={borrowHistoryColumns} dataSource={borrowhistorydata} />
+            <Table columns={borrowHistoryColumns} dataSource={borrowhistorydata} locale={{ emptyText: '暂无数据' }} />
         </>
     )
 }
