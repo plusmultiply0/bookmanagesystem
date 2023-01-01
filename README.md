@@ -29,6 +29,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 5. 打开命令行，运行<code>flask run</code>，在 http://127.0.0.1:5000/ 查看项目
 6. 预设的管理员账号是<code>zzc</code>，普通账号有<code>zjc,abc,赵怀真,沈梦溪</code>，密码都是<code>123456</code>。
+7. 修改前端代码前，请先在 my-app 目录下<code>npm install</code>，然后运行<code>npm start</code>，在http://127.0.0.1:3000/ 查看项目
 
 
 

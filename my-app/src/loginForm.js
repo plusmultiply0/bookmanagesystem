@@ -31,6 +31,7 @@ const LoginForm = () => {
             if (values.isAdmin){
                 window.localStorage.setItem('admin', true)
             }
+            window.localStorage.removeItem('admin')
         } catch (exception){
             // console.log(exception)
             

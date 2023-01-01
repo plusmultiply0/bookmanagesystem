@@ -125,9 +125,11 @@ def pwdchange():
     isadmin = sth['isadmin']
     if isadmin=='true':
         # 根据名字，查找到对应的表项
+        # print(1)
         res1 = adminusr.query.filter(adminusr.username == username).first()
         res1.password = sth['password']
     else:
+        # print(2)
         res1 = normalusr.query.filter(normalusr.username == username).first()
         res1.password = sth['password']
     db.session.commit()
@@ -254,6 +256,9 @@ def toborrow():
         newhistory = bookBorrowHistory(name=name,borrowusr=borrowusr,borrowdate=borrowdate,returndate='')
         db.session.add(newborrow)
         db.session.add(newhistory)
+        # 库存数量-1
+        res2 = bookitem.query.filter(bookitem.name == name).first()
+        res2.number = res2.number - 1
         db.session.commit()
         return jsonify({"msg": "borrow book ok！"})
 
