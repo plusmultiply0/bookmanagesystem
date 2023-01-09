@@ -33,6 +33,7 @@ const Detail = (props)=>{
                     <Descriptions.Item label="剩余数量">{detail.number}</Descriptions.Item>
                     <Descriptions.Item label="内容简介" span={3}>{detail.intro}</Descriptions.Item>
                     <Descriptions.Item label="出版日期">{detail.pubdate}</Descriptions.Item>
+                    <Descriptions.Item label="类别">{detail.type}</Descriptions.Item>
                 </Descriptions>
             </Modal>
         </>
@@ -271,6 +272,9 @@ const BookList = ()=>{
                         <Input />
                     </Form.Item>
                     <Form.Item label="库存数量" name="number">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label="图书类别" name="type">
                         <Input />
                     </Form.Item>
                     <Form.Item label="内容简介" name="intro">

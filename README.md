@@ -17,7 +17,7 @@
 ## 如何使用本项目
 
 1. 使用<code>git clone</code>下载项目代码
-2. 进入backend文件夹，创建python虚拟环境 testvenv<code>python -m venv testvenv</code>，激活虚拟环境 <code>testvenv\scripts\activate</code>
+2. 进入backend文件夹，在 python3 环境下，创建python虚拟环境 testvenv<code>python -m venv testvenv</code>，激活虚拟环境 <code>testvenv\scripts\activate</code>
 3. 在虚拟环境下，安装依赖库 <code>pip install -r requirements.txt</code>
 4. 在backend目录里，创建一个 .env 文件，并写入如下代码。将root替换为你的 MySQL 的登录名，123456替换为登录密码。然后在你的本地MySQL里创建一个名为bookms的数据库DB
 

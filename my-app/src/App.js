@@ -9,6 +9,7 @@ import { BookList } from './bookdata';
 import { CollectList } from './collect'
 import { Self } from './self';
 import { InfoCheck, ReaderManage } from './selfadmin'
+import { UserProfile } from './selfusrprofile'
 
 import {
   BrowserRouter as Router,
@@ -30,6 +31,7 @@ const App = ()=>{
             <Route path='/home/borrowHistory' element={<BorrowHistory />} />
             <Route path='/home/collectList' element={<CollectList />} />
             <Route path='/home/self' element={<Self/>}/>
+            <Route path='/home/userProfile' element={<UserProfile />} />
             <Route path='/home/infoCheck' element={<InfoCheck />} />
             <Route path='/home/readerManage' element={<ReaderManage />} />
           </Route>

@@ -38,6 +38,7 @@ class bookitem(db.Model):
     number=db.Column(db.Integer)
     intro=db.Column(db.String(3000))
     pubdate=db.Column(db.String(30))
+    type=db.Column(db.String(30))
 
 class bookCollect(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
@@ -70,3 +71,4 @@ class booknewitem(db.Model):
     number=db.Column(db.Integer)
     intro=db.Column(db.String(3000))
     pubdate=db.Column(db.String(30))
+    type = db.Column(db.String(30))

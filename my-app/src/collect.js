@@ -163,6 +163,7 @@ const CollectList = ()=>{
             "图书名称":item.name,
             "图书作者":item.author,
             "出版社":item.publish,
+            "图书类别":item.type,
             "出版日期":item.pubdate,
             "ISBN":item.isbn,
             "价格":item.price+'元',

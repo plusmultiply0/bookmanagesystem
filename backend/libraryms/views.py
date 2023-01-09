@@ -174,6 +174,45 @@ def delideas():
     db.session.commit()
     return jsonify({"msg": "ok！"})
 
+# 用户画像
+@app.route('/userprofile', methods=["GET"])
+@cross_origin()
+def userprofile():
+    sth = request.args
+    username = sth['username']
+    tagarray = []
+    bookarray = []
+    # 统计借阅历史
+    res1 = bookBorrowHistory.query.filter(bookBorrowHistory.borrowusr == username).all()
+    for x in res1:
+        bookarray.append(x.name)
+    # 统计收藏信息
+    res2 = bookCollect.query.filter(bookCollect.username == username).all()
+    for x in res2:
+        res3 = bookitem.query.filter(bookitem.isbn == x.isbn).first()
+        bookarray.append(res3.name)
+    # 统计所有标签
+    for x in bookarray:
+        res4 = bookitem.query.filter(bookitem.name == x).first()
+        tagarray.append(res4.type)
+    # print(bookarray)
+    # print(tagarray)
+    # 计算出数量最多的3个标签
+    dict = {}
+    tag = []
+    for x in tagarray:
+        dict[x] = dict.get(x,0)+1
+    # print(dict)
+    if len(dict)>3:
+        while (len(tag)<3):
+            tag.append(max(dict,key=dict.get))
+            dict.pop(max(dict,key=dict.get))
+    else:
+        for key in dict:
+            tag.append(key)
+    # print(tag)
+    return tag
+
 # ------------------------------------------------
 
 # 图书类路由-----------------------------------------
@@ -183,7 +222,7 @@ def bookdata():
     res1 = bookitem.query.all()
     response = []
     for x in res1:
-        item = {"key":x.bid,"name":x.name, "author":x.author, "publish":x.publish, "isbn":x.isbn, "price":x.price, "number":x.number, "intro":x.intro, "pubdate":x.pubdate}
+        item = {"key":x.bid,"name":x.name, "author":x.author, "publish":x.publish, "isbn":x.isbn, "price":x.price, "number":x.number, "type":x.type,"intro":x.intro, "pubdate":x.pubdate}
         response.append(item)
     return response
 
@@ -218,7 +257,7 @@ def collectdata():
     for x in res1:
         res2 = bookitem.query.filter(bookitem.isbn == x.isbn).first()
         item = {"id":res2.bid,"key": res2.bid, "name": res2.name, "author": res2.author, "publish": res2.publish, "isbn": res2.isbn,
-                "price": res2.price, "number": res2.number, "intro": res2.intro, "pubdate": res2.pubdate}
+                "price": res2.price, "number": res2.number, "type":res2.type,"intro": res2.intro, "pubdate": res2.pubdate}
         response.append(item)
     return response
 
@@ -332,9 +371,10 @@ def toaddnewbook():
     isbn = sth['isbn']
     price = sth['price']
     number = sth['number']
+    type = sth['type']
     intro = sth['intro']
     pubdate = sth['pubdate']
-    newitem = booknewitem(name=name,author=author,publish=publish,isbn=isbn,price=price,number=number,intro=intro,pubdate=pubdate)
+    newitem = booknewitem(name=name,author=author,publish=publish,isbn=isbn,price=price,number=number,type=type,intro=intro,pubdate=pubdate)
     db.session.add(newitem)
     db.session.commit()
     return jsonify({"msg": "add new book ok！"})
@@ -419,7 +459,7 @@ def newbookdata():
     res1 = booknewitem.query.all()
     response = []
     for x in res1:
-        item = {"key":x.bid,"name":x.name, "author":x.author, "publish":x.publish, "isbn":x.isbn, "price":x.price, "number":x.number, "intro":x.intro, "pubdate":x.pubdate}
+        item = {"key":x.bid,"name":x.name, "author":x.author, "publish":x.publish, "isbn":x.isbn, "price":x.price, "number":x.number, "type":x.type,"intro":x.intro, "pubdate":x.pubdate}
         response.append(item)
     return response
 
@@ -432,7 +472,7 @@ def newbookaction():
     action = sth['action']
     if action=='ok':
         res1 = booknewitem.query.filter(booknewitem.name == name).first()
-        newitem = bookitem(name=name, author=res1.author, publish=res1.publish, isbn=res1.isbn, price=res1.price, number=res1.number,intro=res1.intro, pubdate=res1.pubdate)
+        newitem = bookitem(name=name, author=res1.author, publish=res1.publish, isbn=res1.isbn, price=res1.price, number=res1.number,type=res1.type,intro=res1.intro, pubdate=res1.pubdate)
         db.session.add(newitem)
         db.session.delete(res1)
     elif action=='no':
@@ -474,6 +514,7 @@ def toeditbook():
     isbn = sth['isbn']
     number = sth['number']
     price = sth['price']
+    type = sth['type']
     pubdate = sth['pubdate']
     publish = sth['publish']
     # isbn默认无误，作为图书的唯一标识
@@ -483,6 +524,7 @@ def toeditbook():
     res1.intro = intro
     res1.number = number
     res1.price = price
+    res1.type = type
     res1.pubdate = pubdate
     res1.publish = publish
     db.session.commit()

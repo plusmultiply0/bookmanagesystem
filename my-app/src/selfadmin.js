@@ -189,6 +189,7 @@ const EditBook = (props) => {
             number: form.getFieldValue('number') ? form.getFieldValue('number') : data.number,
             price: form.getFieldValue('price') ? form.getFieldValue('price') : data.price,
             pubdate: form.getFieldValue('pubdate') ? form.getFieldValue('pubdate') : data.pubdate,
+            type: form.getFieldValue('type') ? form.getFieldValue('type') : data.type,
             publish: form.getFieldValue('publish') ? form.getFieldValue('publish') : data.publish,
             intro: form.getFieldValue('intro') ? form.getFieldValue('intro') : data.intro,
         }
@@ -210,7 +211,7 @@ const EditBook = (props) => {
         <>
             <Space>
                 <Button onClick={showModal}>编辑</Button>
-                <Modal title="编辑用户" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="确认" cancelText="取消">
+                <Modal title="编辑图书" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="确认" cancelText="取消">
                     <Form
                         form={form}
                         name="booksmsg"
@@ -245,6 +246,9 @@ const EditBook = (props) => {
                         </Form.Item>
                         <Form.Item label="出版日期" name="pubdate">
                             <Input defaultValue={data.pubdate} />
+                        </Form.Item>
+                        <Form.Item label="图书类别" name="type">
+                            <Input defaultValue={data.type} />
                         </Form.Item>
                         <Form.Item label="内容简介" name="intro">
                             <TextArea rows={4} maxLength={500} defaultValue={data.intro} />
