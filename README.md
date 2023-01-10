@@ -2,14 +2,14 @@
 
 ## 概述
 
-前端页面基于React + React-Router + Antd开发，后端页面基于Python的Flask框架进行开发。主要功能分为两部分：
+前端页面基于React + React-Router + Antd开发，后端页面基于Python的Flask框架进行开发。主要功能分为三部分：
 
 **普通用户**
 
 - 登录和注册功能
 - 用户实现个人信息及密码的更改
 - 实现个人想法的发布和删除
-- 对图书信息的搜索和查看
+- 对图书信息的搜索（支持模糊搜索）和查看
 - 对图书进行借阅和归还
 - 对图书进行收藏和信息导出
 - 用户新增图书信息
@@ -23,6 +23,12 @@
 - 编辑和修改旧有的图书信息
 - 编辑普通用户信息，以及实现用户账户的删除
 - 可以查看所有用户的收藏和借阅信息。
+
+**其他**
+
+- 未登录页面的路由保护功能
+
+- 丰富且较完备的提示信息
 
 ## 如何使用本项目
 
@@ -102,8 +108,8 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 - https://ant.design/components/overview-cn
 - https://fullstackopen.com/zh/#course-contents
 - https://reactrouter.com/en/main/start/overview
-
 - https://github.com/JeffDing99/books
 - https://github.com/zhanghuanhao/LibrarySystem
+- https://github.com/lyric777/Book-Management-System
 - https://github.com/plusmultiply0/db-big-assignment
 

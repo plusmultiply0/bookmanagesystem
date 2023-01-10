@@ -1,4 +1,4 @@
-import { Space, notification, Button, Table } from 'antd'
+import { Space, notification, Button, Table, Empty, ConfigProvider } from 'antd'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 const borrowData = [

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form, Input, Typography, Result, Space, Table, notification } from 'antd';
+import { Button, Modal, Form, Input, Typography, Result, Space, Table, notification, message } from 'antd';
 
 import axios from 'axios'
 
@@ -178,6 +178,8 @@ const EditBook = (props) => {
     const [form] = Form.useForm();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
+
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -201,6 +203,11 @@ const EditBook = (props) => {
 
         setIsModalOpen(false);
 
+        messageApi.open({
+            type: 'success',
+            content: '编辑成功！',
+        });
+
         setTimeout(() => { window.location.reload() }, 2000)
     };
     const handleCancel = () => {
@@ -209,6 +216,7 @@ const EditBook = (props) => {
 
     return (
         <>
+            {contextHolder}
             <Space>
                 <Button onClick={showModal}>编辑</Button>
                 <Modal title="编辑图书" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="确认" cancelText="取消">
@@ -459,6 +467,7 @@ const Editusr = (props)=>{
     const [form] = Form.useForm();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -476,6 +485,11 @@ const Editusr = (props)=>{
         
         setIsModalOpen(false);
 
+        messageApi.open({
+            type: 'success',
+            content: '编辑成功！',
+        });
+
         setTimeout(() => { window.location.reload() }, 1000)
     };
     const handleCancel = () => {
@@ -484,6 +498,7 @@ const Editusr = (props)=>{
 
     return (
         <>
+            {contextHolder}
             <Space>
                 <Button onClick={showModal}>编辑</Button>
                 <Modal title="编辑用户" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="确认" cancelText="取消">

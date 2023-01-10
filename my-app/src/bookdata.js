@@ -177,6 +177,7 @@ const BookList = ()=>{
     const [confirmLoading, setConfirmLoading] = useState(false);
 
     const [form] = Form.useForm();
+    const [messageApi, contextHolder] = message.useMessage();
 
     const showModal = () => {
         setOpen(true);
@@ -188,14 +189,17 @@ const BookList = ()=>{
             setOpen(false);
             setConfirmLoading(false);
             form.resetFields()
-        }, 2000);
+        }, 500);
         const formValues = form.getFieldsValue();
 
         // console.log('form', formValues)
 
         const res1 = await uniPost('http://127.0.0.1:5000/toaddnewbook', formValues)
         // console.log('res1', res1)
-        
+        messageApi.open({
+            type: 'success',
+            content: '新增图书信息成功！',
+        });
     };
     const handleCancel = () => {
         // console.log('Clicked cancel button');
@@ -214,7 +218,7 @@ const BookList = ()=>{
     //只在第一次渲染时运行
 
     const onSearch = (value) => {
-        console.log(value);
+        // console.log(value);
         if (value) {
             const filterdata = bookData.filter(item => {
                 // console.log(item.value)
@@ -226,10 +230,26 @@ const BookList = ()=>{
             setBookData(savedata)
         }
     }
+    const handleChange = (e)=>{
+        const values = e.target.value
+        // console.log(values)
+        if (values) {
+            // 这里保存一个原始数据，便于反复查找使用
+            const filterdata = savedata.filter(item => {
+                // console.log(item.value)
+                return item.name.includes(values)
+            })
+            // console.log(filterdata)
+            setBookData(filterdata)
+        } else {
+            setBookData(savedata)
+        }
+    }
 
     return(
         <>
-            <Search placeholder="输入书名" onSearch={onSearch} enterButton style={{width: 200,}} />
+            {contextHolder}
+            <Search placeholder="输入书名" onSearch={onSearch} onChange={handleChange} enterButton style={{width: 200,}} />
             <Button type="primary" className="newbook" onClick={showModal}>新建图书</Button>
             <Modal
                 title="新建图书"

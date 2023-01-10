@@ -10,6 +10,7 @@ import { CollectList } from './collect'
 import { Self } from './self';
 import { InfoCheck, ReaderManage } from './selfadmin'
 import { UserProfile } from './selfusrprofile'
+import { ProtectedRoute, ProtectResult } from './other'
 
 import {
   BrowserRouter as Router,
@@ -25,7 +26,8 @@ const App = ()=>{
           <Route path='/login' element={<LoginForm/>}/>
           <Route path='/register' element={<RegisterForm/>}/>
           <Route path="/" element={<BeforeLogin />} />
-          <Route path='/home' element={<Home/>}>
+          <Route path='/permissionerror' element={<ProtectResult/>}/>
+          <Route path='/home' element={<ProtectedRoute><Home /></ProtectedRoute>}>
             <Route path='/home/bookList' element={<BookList />} />
             <Route path='/home/borrowList' element={<BorrowList/>}/>
             <Route path='/home/borrowHistory' element={<BorrowHistory />} />

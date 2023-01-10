@@ -139,6 +139,7 @@ const CollectList = ()=>{
     const [collectdata ,setcollectdata] = useState([])
 
     const [savedata,setsavedata] = useState([])
+    const [messageApi, contextHolder] = message.useMessage();
     
     const baseUrl = 'http://127.0.0.1:5000/collectdata'
     const self = window.localStorage.getItem('loggedUser')
@@ -174,6 +175,11 @@ const CollectList = ()=>{
         XLSX.utils.book_append_sheet(workbook, worksheet);
 
         XLSX.writeFile(workbook, "book.xlsx", { compression: true });
+
+        messageApi.open({
+            type: 'success',
+            content: '导出成功！',
+        });
     }
 
     const onSearch = (value) => {
@@ -190,10 +196,26 @@ const CollectList = ()=>{
             setcollectdata(savedata)
         }
     }
+    const handleChange = (e) => {
+        const values = e.target.value
+        // console.log(values)
+        if (values) {
+            // 这里保存一个原始数据，便于反复查找使用
+            const filterdata = savedata.filter(item => {
+                // console.log(item.value)
+                return item.name.includes(values)
+            })
+            // console.log(filterdata)
+            setcollectdata(filterdata)
+        } else {
+            setcollectdata(savedata)
+        }
+    }
 
     return (
         <>
-            <Search placeholder="输入书名" onSearch={onSearch} enterButton style={{ width: 200, }} />
+            {contextHolder}
+            <Search placeholder="输入书名" onSearch={onSearch} onChange={handleChange} enterButton style={{ width: 200, }} />
             <Button type="primary" className="exportBook" ghost onClick={handleexport}>导出图书</Button>
             <Table columns={collectColumns} dataSource={collectdata} locale={{ emptyText: '暂无数据' }} />
         </>

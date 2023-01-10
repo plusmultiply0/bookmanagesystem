@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Descriptions, Button, Modal, Form, Input, Typography, List, Skeleton} from 'antd';
+import { Descriptions, Button, Modal, Form, Input, Typography, List, Skeleton, message } from 'antd';
 
 import axios from 'axios'
 
@@ -50,7 +50,6 @@ const Self = ()=>{
     }, [])
     //只在第一次渲染时运行
 
-    const data = selfdata[0]
     return(
         <>
             <Descriptions title="用户信息" bordered extra={<EditSelf data={info} handleChange={setInfo}/> }>
@@ -77,6 +76,9 @@ const EditSelf = (props)=>{
     const [infoTel,setInfoTel]= useState(data.tel)
 
     const [infoMsg,setInfoMsg]= useState(data.intro)
+
+    const [messageApi, contextHolder] = message.useMessage();
+
     const handleTel = (event)=>{
         setInfoTel(event.target.value)
     }
@@ -112,6 +114,10 @@ const EditSelf = (props)=>{
         // 更改服务器端信息
         const res1 = await uniPost(newValues)
         // console.log('res1:', res1)
+        messageApi.open({
+            type: 'success',
+            content: '修改成功！',
+        });
     };
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -121,6 +127,7 @@ const EditSelf = (props)=>{
     }
     return(
         <>
+            {contextHolder}
             <Button type="primary" onClick={showModal}>编辑</Button>
             <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="确认" cancelText="取消">
                 <Form
@@ -160,6 +167,8 @@ const EditSelf = (props)=>{
 // 修改密码
 const EditPwd = ()=>{
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
+
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -173,9 +182,14 @@ const EditPwd = ()=>{
     }
 
     const handleOk = async() => {
-        console.log({ firstPwd, secondPwd })
+        // console.log({ firstPwd, secondPwd })
         if (firstPwd == secondPwd){
             // console.log('same,ok!')
+            messageApi.open({
+                type: 'success',
+                content: '修改密码成功！',
+            });
+
             const self = window.localStorage.getItem('loggedUser')
             const newValues = {
                 "username": self,
@@ -210,6 +224,7 @@ const EditPwd = ()=>{
 
     return(
         <>
+            {contextHolder}
             <Button type="primary" onClick={showModal}>修改密码</Button>
             <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="确认" cancelText="取消">
                 <Form
@@ -268,6 +283,8 @@ const IdeaRelease = ()=>{
     const [ideaText,setIdeaText] = useState('')
     const [ideaList, setIdeaList] = useState([])
 
+    const [messageApi, contextHolder] = message.useMessage();
+
     const onChange = (e) => {
         console.log('Change:', e.target.value);
         setIdeaText(e.target.value)
@@ -294,6 +311,10 @@ const IdeaRelease = ()=>{
         // 发送新想法至服务器
         const res1 = await uniPost(newValue)
         // console.log('addidea:', res1)
+        messageApi.open({
+            type: 'success',
+            content: '发布成功！',
+        });
     }
 
     const delideaUrl = 'http://127.0.0.1:5000/delideas'
@@ -309,6 +330,10 @@ const IdeaRelease = ()=>{
         const self = window.localStorage.getItem('loggedUser')
         const res = await delPost({username:self})
         // console.log('delidea:', res)
+        messageApi.open({
+            type: 'success',
+            content: '删除成功！',
+        });
     }
 
     // 获取用户信息
@@ -329,6 +354,7 @@ const IdeaRelease = ()=>{
 
     return(
         <>
+            {contextHolder}
             <Form
                 name="basic"
                 labelCol={{
