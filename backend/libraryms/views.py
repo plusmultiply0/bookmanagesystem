@@ -10,16 +10,25 @@ from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCol
 import random
 
 @app.route('/')
+@app.route('/login')
+@app.route('/register')
+@app.route('/permissionerror')
 @app.route('/home')
 @app.route('/home/bookList')
-@app.route('/home/readerManage')
-@app.route('/home/infoCheck')
-@app.route('/home/collectList')
 @app.route('/home/borrowList')
+@app.route('/home/borrowHistory')
+@app.route('/home/collectList')
 @app.route('/home/self')
+@app.route('/home/userProfile')
+@app.route('/home/infoCheck')
+@app.route('/home/readerManage')
 @cross_origin()
 def index():
     return render_template('index.html')
+
+@app.errorhandler(404)
+def indexerror(error):
+    return render_template('index.html'),404
 
 
 # 登录、注册------------------------------------------------

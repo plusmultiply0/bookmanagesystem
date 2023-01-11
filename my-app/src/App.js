@@ -10,7 +10,7 @@ import { CollectList } from './collect'
 import { Self } from './self';
 import { InfoCheck, ReaderManage } from './selfadmin'
 import { UserProfile } from './selfusrprofile'
-import { ProtectedRoute, ProtectResult } from './other'
+import { ProtectedRoute, ProtectResult, PageNotFound } from './other'
 
 import {
   BrowserRouter as Router,
@@ -37,6 +37,7 @@ const App = ()=>{
             <Route path='/home/infoCheck' element={<InfoCheck />} />
             <Route path='/home/readerManage' element={<ReaderManage />} />
           </Route>
+          <Route path='*' element={<PageNotFound/>}/>
         </Routes>
       </div>
     </Router>

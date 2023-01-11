@@ -33,4 +33,19 @@ const ProtectResult = ()=>{
     )
 }
 
-export { ProtectedRoute, ProtectResult }
+const PageNotFound = ()=>{
+    return(
+        <Result
+            status="404"
+            title="404 页面不存在"
+            subTitle="很抱歉，当前页面不存在"
+            extra={<Link to="/">
+                <Button type="primary">
+                    前往主页
+                </Button>
+            </Link>}
+        />
+    )
+}
+
+export { ProtectedRoute, ProtectResult, PageNotFound }

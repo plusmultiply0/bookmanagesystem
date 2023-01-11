@@ -56,7 +56,7 @@ const MainPage = () => {
     // 面包屑
     const location = useLocation();
     const pathSnippets = location.pathname.split('/').filter((i) => i);
-    // console.log(pathSnippets)
+    // console.log('path:',pathSnippets)
     const extraBreadcrumbItems = pathSnippets.map((_, index) => {
         const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
         // console.log(url)
@@ -72,6 +72,15 @@ const MainPage = () => {
     const {
         token: { colorBgContainer },
     } = theme.useToken();
+
+    // 制定状态切换主页和其他内容
+    let tag = false
+    if (pathSnippets.length<2){
+        tag=true;
+    } else{
+        tag=false
+    }
+    
     return (
         <Layout className="mainpage">
             <Header className="header">
@@ -118,7 +127,7 @@ const MainPage = () => {
                             overflow: 'auto',
                         }}
                     >
-                        <Outlet/>
+                        {tag?<MainContent/>:<Outlet/>}
                     </Content>
                     <Footer
                         style={{
@@ -174,6 +183,22 @@ const LoginStatus = ()=>{
             </Dropdown.Button>
         </Space>
     );
+}
+
+// 主页内容提示
+const MainContent = ()=>{
+
+    return(
+        <>
+            <Title level={3}>欢迎来到图书管理系统！</Title>
+            <br/>
+            <p>点击左侧的导航按钮，可以访问不同内容，请尽情尝试！</p>
+            <br />
+            <p>信息审核和读者管理为管理员模块，普通用户不可访问。</p>
+            <br/>
+            <p>点击右上角小人图标，可以退出登录状态。</p>
+        </>
+    )
 }
 
 export default Home;
