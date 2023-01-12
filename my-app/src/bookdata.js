@@ -441,4 +441,4 @@ const bookdata = [
     },
 ]
 
-export { columns, bookdata, BookList, Detail } 
+export { columns, bookdata, BookList, Detail ,Borrow,Collect} 

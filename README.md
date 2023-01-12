@@ -14,6 +14,7 @@
 - 对图书进行收藏和信息导出
 - 用户新增图书信息
 - 生成用户画像/标签
+- 个性化推荐图书
 
 **管理员用户**
 
@@ -49,8 +50,6 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 
 
-
-
 ## 功能展示
 
 起始页
@@ -62,6 +61,8 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 ![](screenshot/login.png)
 
 ![](screenshot/register.png)
+
+### 普通用户部分
 
 主页面
 
@@ -81,11 +82,15 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ![](screenshot/self.png)
 
+个性推荐部分，包含用户画像/标签生成和图书推荐环节
+
+![](screenshot/self3.png)
+
 无权限访问管理员页面
 
 ![](screenshot/self2.png)
 
-管理员页面
+### 管理员部分
 
 书籍信息审核
 
@@ -102,6 +107,16 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 查看所有用户收藏和借阅信息
 
 ![](screenshot/admin4.png)
+
+### 其他功能
+
+未登录页面会有路由保护功能，自动跳转指定页面
+
+![](screenshot/other.png)
+
+路由错误或者找不到指定页面时
+
+![](screenshot/other2.png)
 
 ## 参考资料
 

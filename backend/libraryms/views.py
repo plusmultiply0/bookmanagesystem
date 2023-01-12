@@ -222,6 +222,21 @@ def userprofile():
     # print(tag)
     return tag
 
+@app.route('/userrecommend', methods=["POST"])
+@cross_origin()
+def userrecommend():
+    sth = request.json
+    tagarray = sth['tagarray']
+    book = []
+    # print(tagarray)
+    for x in tagarray:
+        res1 = bookitem.query.filter(bookitem.type == x).all()
+        a = random.choice(res1)
+        item = {"key": a.bid, "name": a.name, "author": a.author, "publish": a.publish, "isbn": a.isbn,"price": a.price, "number": a.number, "type": a.type, "intro": a.intro, "pubdate": a.pubdate}
+        book.append(item)
+    # print(book)
+    return book
+
 # ------------------------------------------------
 
 # 图书类路由-----------------------------------------
