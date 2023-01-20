@@ -52,7 +52,7 @@ const LoginForm = () => {
                 closable
             />:''}
             {
-                islogged && <Navigate to="/home/self" replace={true} />
+                islogged && <Navigate to="/home/bookList" replace={true} />
             }
             <Form
                 name="normal_login"

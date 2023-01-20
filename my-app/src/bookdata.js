@@ -173,39 +173,6 @@ const BookList = ()=>{
     const [bookData,setBookData] = useState([])
     const [savedata,setSaveData] = useState([])
 
-    const [open, setOpen] = useState(false);
-    const [confirmLoading, setConfirmLoading] = useState(false);
-
-    const [form] = Form.useForm();
-    const [messageApi, contextHolder] = message.useMessage();
-
-    const showModal = () => {
-        setOpen(true);
-    };
-    const handleOk = async () => {
-        
-        setConfirmLoading(true);
-        setTimeout(() => {
-            setOpen(false);
-            setConfirmLoading(false);
-            form.resetFields()
-        }, 500);
-        const formValues = form.getFieldsValue();
-
-        // console.log('form', formValues)
-
-        const res1 = await uniPost('http://127.0.0.1:5000/toaddnewbook', formValues)
-        // console.log('res1', res1)
-        messageApi.open({
-            type: 'success',
-            content: '新增图书信息成功！',
-        });
-    };
-    const handleCancel = () => {
-        // console.log('Clicked cancel button');
-        setOpen(false);
-    };
-
     useEffect(()=>{
         // console.log('effect')
         axios.get(baseUrl).then(response => {
@@ -248,60 +215,7 @@ const BookList = ()=>{
 
     return(
         <>
-            {contextHolder}
             <Search placeholder="输入书名" onSearch={onSearch} onChange={handleChange} enterButton style={{width: 200,}} />
-            <Button type="primary" className="newbook" onClick={showModal}>新建图书</Button>
-            <Modal
-                title="新建图书"
-                open={open}
-                onOk={handleOk}
-                confirmLoading={confirmLoading}
-                onCancel={handleCancel}
-                okText="确认" cancelText="取消"
-            >
-                <Form
-                    form={form}
-                    name="bookmsg"
-                    labelCol={{
-                        span: 8,
-                    }}
-                    wrapperCol={{
-                        span: 16,
-                    }}
-                    initialValues={{
-                        remember: true,
-                    }}
-                    autoComplete="off"
-                >
-                    <Form.Item label="图书名称" name="name">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="图书作者" name="author">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="出版社" name="publish">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="ISBN" name="isbn">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="价格" name="price">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="出版日期" name="pubdate">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="库存数量" name="number">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="图书类别" name="type">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="内容简介" name="intro">
-                        <TextArea rows={4} maxLength={500}/>
-                    </Form.Item>
-                </Form>
-            </Modal>
             <Table columns={columns} dataSource={bookData} locale={{ emptyText: '暂无数据' }} />
         </>
     );

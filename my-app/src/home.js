@@ -134,7 +134,7 @@ const MainPage = () => {
                             textAlign: 'center',
                         }}
                     >
-                        Book management system ©2022 Created by ZJC
+                        Book management system ©2023 Created by ZJC
                     </Footer>
                 </Layout>
             </Layout>
