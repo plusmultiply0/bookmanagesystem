@@ -1,5 +1,9 @@
-import { Form, Button } from "antd";
-import { Link } from "react-router-dom";
+import { Form, Button, Layout, Menu, theme, Dropdown, Typography, Space, Table, Modal, Input } from "antd";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { LaptopOutlined, UserOutlined, BookOutlined, AppstoreOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'
+import { Detail } from './bookdata'
 
 // 登录之前的页面显示
 const BeforeLogin = () => {
@@ -15,8 +19,235 @@ const BeforeLogin = () => {
                     <Button type="primary" id="homeregister" size="large">注册</Button>
                 </Link>
             </Form.Item>
+            <Form.Item>
+                <Link to="/bookpreview">
+                    <Button type="primary" id="homepreview" size="large">随便逛逛</Button>
+                </Link>
+            </Form.Item>
         </Form>
     )
 }
 
-export default BeforeLogin
+const { Header, Content, Sider, Footer } = Layout;
+const { Title } = Typography;
+const { Search } = Input;
+
+function getItem(label, key, icon, children, type) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+        type,
+    };
+}
+const items = [
+    getItem('图书管理', 'sub1', <BookOutlined />, [getItem(<Link to="/bookpreview">图书列表</Link>, 'g1'),]),
+]
+
+const BookPreview = ()=>{
+
+    const [bookData, setBookData] = useState([])
+    const [savedata, setSaveData] = useState([])
+
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken();
+
+    const baseUrl = 'http://127.0.0.1:5000/bookdata'
+
+    useEffect(() => {
+        // console.log('effect')
+        axios.get(baseUrl).then(response => {
+            const data = response.data
+            // console.log(data)
+            setBookData(data)
+            setSaveData(data)
+        })
+    }, [])
+    //只在第一次渲染时运行
+
+    const handleChange = (e) => {
+        const values = e.target.value
+        // console.log(values)
+        if (values) {
+            // 这里保存一个原始数据，便于反复查找使用
+            const filterdata = savedata.filter(item => {
+                // console.log(item.value)
+                return item.name.includes(values)
+            })
+            // console.log(filterdata)
+            setBookData(filterdata)
+        } else {
+            setBookData(savedata)
+        }
+    }
+
+    return(
+        <>
+            <Layout className="mainpage">
+                <Header className="header">
+                    <Title level={3} type="success" className="wetitle">图书管理系统</Title>
+                    <LoginRegisterButton/>
+                </Header>
+                <Layout>
+                    <Sider
+                        width={200}
+                        style={{
+                            background: colorBgContainer,
+                        }}
+                    >
+                        <Menu
+                            mode="inline"
+                            defaultSelectedKeys={['1']}
+                            defaultOpenKeys={['sub1']}
+                            style={{
+                                height: '100%',
+                                borderRight: 0,
+                            }}
+                            items={items}
+                        />
+                    </Sider>
+                    <Layout
+                        style={{
+                            padding: '0 24px 24px',
+                        }}
+                    >
+                        <Content
+                            style={{
+                                padding: 24,
+                                margin: 0,
+                                minHeight: 280,
+                                background: colorBgContainer,
+                                overflow: 'auto',
+                            }}
+                        >
+                            {/* <p>此为预览页面，仅提供基本功能展示。若想体验完整功能，请先注册并登录！</p> */}
+                            <Search placeholder="输入书名" onChange={handleChange} enterButton style={{ width: 200, }} />
+                            <br/>
+                            <br />
+                            <Table columns={columns} dataSource={bookData} locale={{ emptyText: '暂无数据' }} />
+                        </Content>
+                        <Footer
+                            style={{
+                                textAlign: 'center',
+                            }}
+                        >
+                            Book management system ©2023 Created by ZJC
+                        </Footer>
+                    </Layout>
+                </Layout>
+            </Layout>
+        </>
+    )
+}
+
+const LoginRegisterButton = () => {
+
+    const items = [
+        {
+            label: <Link to="/login">登录</Link>,
+            key: '0',
+        },
+        {
+            type: 'divider',
+        },
+        {
+            label: <Link to="/register">注册</Link>,
+            key: '1',
+        },
+    ];
+    return (
+        <Space wrap className="loginstatus">
+            <Dropdown.Button
+                menu={{
+                    items,
+                }}
+                trigger={['click']}
+            >
+                登录/注册
+            </Dropdown.Button>
+        </Space>
+    );
+}
+
+const columns = [
+    {
+        title: '图书名称',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: '图书作者',
+        dataIndex: 'author',
+        key: 'author',
+    },
+    {
+        title: '出版社',
+        dataIndex: 'publish',
+        key: 'publish',
+    },
+    {
+        title: 'ISBN',
+        dataIndex: 'isbn',
+        key: 'isbn',
+    },
+    {
+        title: '价格',
+        dataIndex: 'price',
+        key: 'price',
+        render: (price) => <p>{price}元</p>
+    },
+    {
+        title: '剩余数量',
+        dataIndex: 'number',
+        key: 'number',
+    },
+    {
+        title: '操作',
+        key: 'action',
+        render: (_, record) => (
+            <Space size="middle">
+                <FakeBorrowCollect name="借阅"/>
+                <Detail data={record} />
+                <FakeBorrowCollect name="收藏" />
+            </Space>
+        )
+    },
+]
+
+const { confirm } = Modal;
+
+const FakeBorrowCollect = (props) => {
+    const name = props.name
+
+    const buttontype = name == "收藏" ? 'dashed' :'default'
+
+    const navigate = useNavigate();
+
+    const handleCilck = () => {
+        confirm({
+            title: '提示',
+            icon: <ExclamationCircleFilled />,
+            content: '收藏或借阅前请先登录！',
+            okText: '去登录',
+            cancelText: '取消',
+            onOk() {
+                navigate('/login')
+            },
+            onCancel() {
+                
+            },
+        });
+    }
+
+    return (
+        <>
+            <Space>
+                <Button onClick={handleCilck} type={buttontype}>{name}</Button>
+            </Space>
+        </>
+    )
+}
+
+export { BeforeLogin, BookPreview } 

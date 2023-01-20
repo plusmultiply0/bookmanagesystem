@@ -38,13 +38,18 @@
   padding-top: 20px;
 }
 
-/* 调节主页的两个按钮 */
+/* 调节主页的3个按钮 */
 #homelogin,#homeregister{
   padding-left: 100px;
   padding-right: 100px;
 }
-#homeregister{
+#homeregister,#homepreview{
   margin-top: 150px;
+}
+
+#homepreview{
+  padding-left: 87px;
+  padding-right: 87px;
 }
 
 .mainpage{

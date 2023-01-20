@@ -3,7 +3,7 @@ import './App.css';
 import LoginForm from './loginForm';
 import RegisterForm from './registerForm';
 import Home from './home';
-import BeforeLogin from './beforeLogin';
+import { BeforeLogin, BookPreview } from './beforeLogin';
 import { BorrowList, BorrowHistory } from './borrow';
 import { BookList } from './bookdata';
 import { CollectList } from './collect'
@@ -26,6 +26,7 @@ const App = ()=>{
           <Route path='/login' element={<LoginForm/>}/>
           <Route path='/register' element={<RegisterForm/>}/>
           <Route path="/" element={<BeforeLogin />} />
+          <Route path="/bookpreview" element={<BookPreview />} />
           <Route path='/permissionerror' element={<ProtectResult/>}/>
           <Route path='/home' element={<ProtectedRoute><Home /></ProtectedRoute>}>
             <Route path='/home/bookList' element={<BookList />} />

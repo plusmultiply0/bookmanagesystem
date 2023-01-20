@@ -12,6 +12,7 @@ import random
 @app.route('/')
 @app.route('/login')
 @app.route('/register')
+@app.route('/bookpreview')
 @app.route('/permissionerror')
 @app.route('/home')
 @app.route('/home/bookList')
