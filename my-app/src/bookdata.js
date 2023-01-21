@@ -50,6 +50,7 @@ const uniPost = async (url, res) => {
 
 const Borrow = (props)=>{
     const data = props.data
+    const tag = props.tag
 
     const [isBorrow,setBorrow] = useState(true);
     const [api, contextHolder] = notification.useNotification();
@@ -118,7 +119,9 @@ const Borrow = (props)=>{
 
         openNotificationWithIcon(isBorrow ? 'success' : 'error')
 
-        setTimeout(() => { window.location.reload() }, 2000)
+        if(tag){
+            setTimeout(() => { window.location.reload() }, 2000)
+        }
     }
 
     return(
@@ -261,7 +264,7 @@ const columns = [
         render:(_,record)=>(
             <Space size="middle">
                 <Detail data={record}/>
-                <Borrow data={record} />
+                <Borrow data={record} tag={true}/>
                 <Collect data={record} />
             </Space>
         )

@@ -1,5 +1,5 @@
 import React ,{ useState, useEffect } from 'react';
-import { Card, Button, Spin, Tag, Divider, message, Space, Table } from 'antd';
+import { Card, Button, Spin, Tag, Divider, message, Space, Table, Modal, Descriptions } from 'antd';
 import axios from 'axios'
 import { Detail, Borrow, Collect, columns } from './bookdata'
 
@@ -137,10 +137,92 @@ const UserRecommend = ()=>{
                 }}
             >
                 <p>图书推荐是根据你的借阅和收藏信息，后台生成的你可能喜欢的图书清单</p>
-                {data.length == 0 ?<></>:<Table columns={columns} dataSource={data} locale={{ emptyText: '暂无数据' }} />}
+                {data.length == 0 ? <></> : <Table columns={usrcolumns} dataSource={data} locale={{ emptyText: '暂无数据' }} />}
             </Card>
         </>
     )
 }
+
+// 修复借阅后页面刷新问题
+const usrcolumns = [
+    {
+        title: '图书名称',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: '图书作者',
+        dataIndex: 'author',
+        key: 'author',
+    },
+    {
+        title: '出版社',
+        dataIndex: 'publish',
+        key: 'publish',
+    },
+    {
+        title: 'ISBN',
+        dataIndex: 'isbn',
+        key: 'isbn',
+    },
+    {
+        title: '价格',
+        dataIndex: 'price',
+        key: 'price',
+        render: (price) => <p>{price}元</p>
+    },
+    {
+        title: '类别',
+        dataIndex: 'type',
+        key: 'type',
+    },
+    {
+        title: '操作',
+        key: 'action',
+        render: (_, record) => (
+            <Space size="middle">
+                <XDetail data={record} />
+                <Borrow data={record} tag={false}/>
+                <Collect data={record} />
+            </Space>
+        )
+    },
+]
+
+const XDetail = (props) => {
+    let detail = props.data
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+    return (
+        <>
+            <Button type="primary" onClick={showModal}>
+                详情
+            </Button>
+            <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="确认" cancelText="取消">
+                <Descriptions title="图书详细信息" bordered>
+                    <Descriptions.Item label="图书名称" span={2}>{detail.name}</Descriptions.Item>
+                    <Descriptions.Item label="图书作者">{detail.author}</Descriptions.Item>
+                    <Descriptions.Item label="出版社" span={2}>{detail.publish}</Descriptions.Item>
+                    <Descriptions.Item label="ISBN">{detail.isbn}</Descriptions.Item>
+                    <Descriptions.Item label="价格" span={2}>{detail.price}元</Descriptions.Item>
+                    <Descriptions.Item label="类别">{detail.type}</Descriptions.Item>
+                    <Descriptions.Item label="内容简介" span={3}>{detail.intro}</Descriptions.Item>
+                    <Descriptions.Item label="出版日期">{detail.pubdate}</Descriptions.Item>
+                </Descriptions>
+            </Modal>
+        </>
+    )
+}
+
 
 export {UserProfile}
