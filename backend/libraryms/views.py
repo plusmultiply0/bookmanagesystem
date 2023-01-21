@@ -5,7 +5,7 @@ from flask import render_template, jsonify, request
 from flask_jwt_extended import create_access_token
 
 from libraryms import db
-from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem
+from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,messageboard
 
 import random
 
@@ -414,6 +414,29 @@ def toaddnewbook():
     db.session.add(newitem)
     db.session.commit()
     return jsonify({"msg": "add new book ok！"})
+
+# 留言板功能
+@app.route('/mbdata', methods=["GET"])
+@cross_origin()
+def messagedata():
+    res1 = messageboard.query.all()
+    response = []
+    for x in res1:
+        item = {'username':x.username,"text":x.text}
+        response.append(item)
+    return response
+
+@app.route('/addmb', methods=["POST"])
+@cross_origin()
+def addmb():
+    sth = request.json
+    # print('msg:', sth)
+    username = sth['username']
+    text = sth['text']
+    nitem = messageboard(username=username, text=text)
+    db.session.add(nitem)
+    db.session.commit()
+    return jsonify({"msg": "ok！"})
 
 # -----------------------------------------------------
 

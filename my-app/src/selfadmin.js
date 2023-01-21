@@ -673,7 +673,7 @@ const PermissionError = () => {
         <Result
             status="error"
             title="权限错误！"
-            subTitle="请检查自身的权限设置！" 
+            subTitle="请检查自身的权限设置！非管理员禁止访问此部分功能！" 
         >
         </Result>
     );

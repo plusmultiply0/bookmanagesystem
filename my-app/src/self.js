@@ -286,7 +286,7 @@ const IdeaRelease = ()=>{
     const [messageApi, contextHolder] = message.useMessage();
 
     const onChange = (e) => {
-        console.log('Change:', e.target.value);
+        // console.log('Change:', e.target.value);
         setIdeaText(e.target.value)
     };
 

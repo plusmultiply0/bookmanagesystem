@@ -1,6 +1,6 @@
 import click
 from libraryms import app,db
-from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem
+from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,messageboard
 
 #python shell上下文
 @app.shell_context_processor
@@ -93,6 +93,14 @@ def build():
     db.session.add(mzjc2)
     db.session.add(mzjc3)
     db.session.add(mzzc1)
+    db.session.commit()
+    # 留言板数据
+    m = messageboard(username='zjc', text='想看三体Ⅲ，希望能尽快上架QAQ')
+    db.session.add(m)
+    m = messageboard(username='沈梦溪', text='希望能借阅《黑客与画家》这本书，心心念念好久了')
+    db.session.add(m)
+    m = messageboard(username='abc', text='什么时候能上架《翦商》，上新书的速度太慢了！！！')
+    db.session.add(m)
     db.session.commit()
     # 新建图书数据
     b = booknewitem(name='德尔塔的悲剧', author='[日] 浦贺和宏', publish='四川文艺出版社', isbn='9787541164323', price='45.00', number=7, intro='十岁的少年山田信介溺死在公园的水池里，被当作意外落水处理。曾经欺负山田信介的斋木、丹治、绪川三人组生怕惹上嫌疑卷入事件中，从此逐渐疏远。十年后，在死者的忌日这天，三个人也迎来了成人之日，一个自称信介童年好友的神秘男子出现在他们面前，逼迫三人说出当年的真相。从这一天起，他 们将直面自己的罪行。面对男人不依不饶的追问，三人组有的冷静、有的暴躁、有的恐惧，而这时又发生了新的悲剧......', pubdate='2022-11',type='推理')

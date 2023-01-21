@@ -11,6 +11,7 @@ import { Self } from './self';
 import { InfoCheck, ReaderManage } from './selfadmin'
 import { UserProfile } from './selfusrprofile'
 import { ProtectedRoute, ProtectResult, PageNotFound } from './other'
+import { MessageBoard } from './messageboard'
 
 import {
   BrowserRouter as Router,
@@ -30,6 +31,7 @@ const App = ()=>{
           <Route path='/permissionerror' element={<ProtectResult/>}/>
           <Route path='/home' element={<ProtectedRoute><Home /></ProtectedRoute>}>
             <Route path='/home/bookList' element={<BookList />} />
+            <Route path='/home/messageBoard' element={<MessageBoard />} />
             <Route path='/home/borrowList' element={<BorrowList/>}/>
             <Route path='/home/borrowHistory' element={<BorrowHistory />} />
             <Route path='/home/collectList' element={<CollectList />} />

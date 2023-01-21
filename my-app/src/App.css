@@ -60,14 +60,14 @@
   margin-left: 20px;
 }
 
-.ideainput{
+.ideainput,.mbinput{
   width: 500px;
 }
 
-.ideabutton{
+.ideabutton,.mbbutton{
   margin-left: 450px;
 }
-.idealist{
+.idealist,.mblist{
   width: 60%;
 }
 
