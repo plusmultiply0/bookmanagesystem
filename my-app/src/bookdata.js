@@ -148,6 +148,7 @@ const Collect = (props)=>{
             isbn:data.isbn,
             isCollect
         }
+        // console.log(newValue)
         
         setCollect(!isCollect)
 

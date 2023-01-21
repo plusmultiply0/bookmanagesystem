@@ -260,13 +260,24 @@ def tocollect():
     isbn = sth['isbn']
     iscollect = sth['isCollect']
     if not iscollect:
-        newitem = bookCollect(username=username,isbn=isbn)
-        db.session.add(newitem)
-        db.session.commit()
+        # 先找书的所有收藏信息
+        res1 = bookCollect.query.filter(bookCollect.isbn == isbn).all()
+        tag = False
+        # 再判断是否收藏这本书
+        for x in res1:
+            if x.username == username:
+                tag=True
+        # 没收藏就记录信息，收藏过就忽略
+        if not tag:
+            newitem = bookCollect(username=username,isbn=isbn)
+            db.session.add(newitem)
+            db.session.commit()
         return jsonify({"msg": "collect ok！"})
     else:
-        res1 = bookCollect.query.filter(bookCollect.isbn == isbn).first()
-        db.session.delete(res1)
+        res1 = bookCollect.query.filter(bookCollect.isbn == isbn).all()
+        for x in res1:
+            if x.username==username:
+                db.session.delete(x)
         db.session.commit()
         return jsonify({"msg": "cancel collect ok！"})
 

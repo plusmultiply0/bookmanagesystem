@@ -153,7 +153,7 @@ const BorrowList = ()=>{
     }
 
     useEffect(() => {
-        console.log('effect')
+        // console.log('effect')
         axios.get(baseUrl, {
             params: res
         }).then(response => {
@@ -235,7 +235,7 @@ const BorrowHistory = ()=>{
     }
 
     useEffect(() => {
-        console.log('effect')
+        // console.log('effect')
         axios.get(baseUrl, {
             params: res
         }).then(response => {

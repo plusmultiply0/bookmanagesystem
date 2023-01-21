@@ -110,7 +110,7 @@ const UserRecommend = ()=>{
 
     const handleCilck = async()=>{
         const res1 = await uniPost(urlsecond, tagvalue)
-        console.log('data:', res1)
+        // console.log('data:', res1)
         setData(res1)
 
         if (res1.length == 0) {

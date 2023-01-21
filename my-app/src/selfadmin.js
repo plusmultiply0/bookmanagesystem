@@ -112,7 +112,7 @@ const InfoCheck = () => {
     const [messageApi, contextHolder] = message.useMessage();
 
     useEffect(() => {
-        console.log('effect')
+        // console.log('effect')
         axios.get('http://127.0.0.1:5000/bookdata').then(response => {
             const data = response.data
             // console.log('data:', data)
@@ -443,7 +443,7 @@ const ReaderManage = () => {
     const [usrborrowdata, setUsrBorrowData] = useState([])
 
     useEffect(() => {
-        console.log('effect')
+        // console.log('effect')
         axios.get('http://127.0.0.1:5000/usrdata').then(response => {
             const data = response.data
             // console.log('data:', data)
