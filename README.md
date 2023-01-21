@@ -2,7 +2,7 @@
 
 ## 概述
 
-前端页面基于React + React-Router + Antd开发，后端页面基于Python的Flask框架进行开发。主要功能分为三部分：
+前端页面基于 React + React-Router + Antd 开发，后端页面基于 Python 的 Flask 框架进行开发。主要功能分为三部分：
 
 **普通用户**
 
@@ -57,6 +57,14 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 起始页
 
 ![](screenshot/1.png)
+
+点击随便逛逛，在登录前可以预览图书信息
+
+![](screenshot/2.png)
+
+进行相关操作时，提示登录才能完成
+
+![](screenshot/3.png)
 
 登录及注册页
 
