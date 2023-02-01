@@ -60,6 +60,19 @@ class bookBorrowHistory(db.Model):
     borrowdate=db.Column(db.String(30))
     returndate=db.Column(db.String(30))
 
+# 图书违约记录表
+class bookDefaultRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    name = db.Column(db.String(50))
+    borrowusr = db.Column(db.String(30))
+    borrowdate = db.Column(db.String(30))
+    shouldreturndate = db.Column(db.String(30))
+    number = db.Column(db.Integer)
+    borrowtimestamp = db.Column(db.String(50))
+    returntimestamp = db.Column(db.String(50))
+    ispayfine = db.Column(db.Integer)
+    isreturnbook = db.Column(db.Integer)
+
 # 新建图书信息表
 class booknewitem(db.Model):
     bid=db.Column(db.Integer,primary_key=True,nullable=False,autoincrement=True)

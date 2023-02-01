@@ -1,32 +1,8 @@
-import { Space, notification, Button, Table, Empty, ConfigProvider } from 'antd'
+import { Space, notification, Button, Table, Empty, ConfigProvider, Typography, Modal } from 'antd'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-const borrowData = [
-    {
-        id:'1',
-        name:'黑客与画家',
-        borrowusr:'zjc',
-        borrownum:'1',
-        borrowdate:'2022-12-15',
-        returndate:'',
-    },
-    {
-        id: '2',
-        name: '风起陇西',
-        borrowusr: 'zjc',
-        borrownum: '2',
-        borrowdate: '2022-11-30',
-        returndate: '',
-    },
-    {
-        id: '3',
-        name: '恶意',
-        borrowusr: 'zjc',
-        borrownum: '1',
-        borrowdate: '2022-12-01',
-        returndate: '',
-    },
-]
+
+const { Title } = Typography;
 
 const borrowColumns = [
     {
@@ -122,7 +98,8 @@ const Return = (props) => {
             borrowusr: self,
             name: data.name,
             borrownum: 1,
-            returndate: getCurrentTime(false)
+            returndate: getCurrentTime(false),
+            timestamp: new Date().getTime()
         }
         // console.log(newValue)
         const res1 = await uniPost('http://127.0.0.1:5000/toreturn', newValue)
@@ -199,29 +176,6 @@ const borrowHistoryColumns = [
         render: (returndate)=>returndate?returndate:'尚未归还'
     },
 ]
-const borrowHistoryData = [
-    {
-        id: '1',
-        name: '黑客与画家',
-        borrowusr: 'zjc',
-        borrowdate: '2022-12-15',
-        returndate: '',
-    },
-    {
-        id: '2',
-        name: '风起陇西',
-        borrowusr: 'zjc',
-        borrowdate: '2022-11-30',
-        returndate: '2022-12-05',
-    },
-    {
-        id: '3',
-        name: '恶意',
-        borrowusr: 'zjc',
-        borrowdate: '2022-12-01',
-        returndate: '',
-    },
-]
 
 const BorrowHistory = ()=>{
     const [borrowhistorydata, setBorrowHistoryData] = useState([])
@@ -248,6 +202,7 @@ const BorrowHistory = ()=>{
 
     return(
         <>
+            <Title>借阅历史</Title>
             <Table columns={borrowHistoryColumns} dataSource={borrowhistorydata} locale={{ emptyText: '暂无数据' }} />
         </>
     )

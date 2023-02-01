@@ -12,6 +12,7 @@ import { InfoCheck, ReaderManage } from './selfadmin'
 import { UserProfile } from './selfusrprofile'
 import { ProtectedRoute, ProtectResult, PageNotFound } from './other'
 import { MessageBoard } from './messageboard'
+import { DefaultRecord } from './defaultrecord'
 
 import {
   BrowserRouter as Router,
@@ -34,6 +35,7 @@ const App = ()=>{
             <Route path='/home/messageBoard' element={<MessageBoard />} />
             <Route path='/home/borrowList' element={<BorrowList/>}/>
             <Route path='/home/borrowHistory' element={<BorrowHistory />} />
+            <Route path='/home/defaultRecord' element={<DefaultRecord />} />
             <Route path='/home/collectList' element={<CollectList />} />
             <Route path='/home/self' element={<Self/>}/>
             <Route path='/home/userProfile' element={<UserProfile />} />

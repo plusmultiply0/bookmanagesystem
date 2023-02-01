@@ -5,7 +5,7 @@ from flask import render_template, jsonify, request
 from flask_jwt_extended import create_access_token
 
 from libraryms import db
-from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,messageboard
+from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,messageboard,bookDefaultRecord
 
 import random
 
@@ -16,8 +16,10 @@ import random
 @app.route('/permissionerror')
 @app.route('/home')
 @app.route('/home/bookList')
+@app.route('/home/messageBoard')
 @app.route('/home/borrowList')
 @app.route('/home/borrowHistory')
+@app.route('/home/defaultRecord')
 @app.route('/home/collectList')
 @app.route('/home/self')
 @app.route('/home/userProfile')
@@ -307,6 +309,7 @@ def toborrow():
     borrownum = sth['borrownum']
     borrowdate = sth['borrowdate']
     shouldreturndate = sth['shouldreturndate']
+    timestamp = sth['timestamp']
 
     hasborrow = False
     borrowitem = ''
@@ -318,8 +321,14 @@ def toborrow():
 
     # db里查询到借阅过相关书
     if hasborrow:
-        print(borrowitem.name)
+        # print(borrowitem.name)
         borrowitem.borrownum = borrowitem.borrownum+1
+        # 违约记录中数量+1
+        res3 = bookDefaultRecord.query.filter(bookDefaultRecord.name == name).all()
+        for x in res3:
+            if x.borrowusr == borrowusr:
+                item = x
+        item.number = item.number+1
         # 库存数量-1
         res2 = bookitem.query.filter(bookitem.name == name).first()
         res2.number = res2.number-1
@@ -331,6 +340,8 @@ def toborrow():
         newhistory = bookBorrowHistory(name=name,borrowusr=borrowusr,borrowdate=borrowdate,returndate='')
         db.session.add(newborrow)
         db.session.add(newhistory)
+        newdefault = bookDefaultRecord(name=name,borrowusr=borrowusr,borrowdate=borrowdate,shouldreturndate=shouldreturndate,number=borrownum,borrowtimestamp=timestamp,ispayfine=0,isreturnbook=0)
+        db.session.add(newdefault)
         # 库存数量-1
         res2 = bookitem.query.filter(bookitem.name == name).first()
         res2.number = res2.number - 1
@@ -377,6 +388,7 @@ def toreturn():
     borrowusr = sth['borrowusr']
     name = sth['name']
     returndate = sth['returndate']
+    timestamp = sth['timestamp']
     res1 = bookBorrow.query.filter(bookBorrow.borrowusr == borrowusr).all()
     for x in res1:
         if x.name == name:
@@ -384,6 +396,14 @@ def toreturn():
                 x.borrownum = x.borrownum-1
             else:
                 db.session.delete(x)
+                # 当书尽数归还，记录已还书和最后的时间戳
+                res3 = bookDefaultRecord.query.filter(bookDefaultRecord.name == name).all()
+                for x in res3:
+                    if x.borrowusr == borrowusr:
+                        item = x
+                item.isreturnbook = 1
+                item.returntimestamp = timestamp
+
     db.session.commit()
     res2 = bookBorrowHistory.query.filter(bookBorrowHistory.borrowusr == borrowusr).all()
     for x in res2:
@@ -437,6 +457,34 @@ def addmb():
     db.session.add(nitem)
     db.session.commit()
     return jsonify({"msg": "ok！"})
+
+# 图书违约
+@app.route('/defaultdata', methods=["GET"])
+@cross_origin()
+def defaultdata():
+    sth = request.args
+    # print(sth)
+    username = sth['username']
+    res1 = bookDefaultRecord.query.filter(bookDefaultRecord.borrowusr == username).all()
+    response = []
+    for x in res1:
+        item = {"key":random.random(),"name":x.name,"borrowusr":x.borrowusr,"borrowdate":x.borrowdate,"shouldreturndate":x.shouldreturndate,"number":x.number,"borrowtimestamp":x.borrowtimestamp,"returntimestamp":x.returntimestamp,"ispayfine":x.ispayfine,"isreturnbook":x.isreturnbook}
+        response.append(item)
+    return response
+
+@app.route('/defaultpay', methods=["POST"])
+@cross_origin()
+def defaultpay():
+    sth = request.json
+    # print('msg:', sth)
+    username = sth['username']
+    name = sth['name']
+    res1 = bookDefaultRecord.query.filter(bookDefaultRecord.borrowusr == username).all()
+    for x in res1:
+        if x.name==name:
+            x.ispayfine = 1
+    db.session.commit()
+    return jsonify({"msg": "pay default ok！"})
 
 # -----------------------------------------------------
 

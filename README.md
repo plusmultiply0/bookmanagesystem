@@ -32,7 +32,8 @@
 - 未登录页面的路由保护功能
 - 面包屑导航功能
 - 丰富且较完备的提示信息
-- 提供预览界面搜索查看图书信息
+- 提供预览界面（随便逛逛）搜索查看图书信息
+- 图书超期未还会被记录，超期需缴纳罚款并且限制借书
 
 ## 如何使用本项目
 
@@ -132,6 +133,18 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 路由错误或者找不到指定页面时
 
 ![](screenshot/other2.png)
+
+图书超期违约会被记录
+
+![](screenshot/default1.png)
+
+缴纳罚金前需要将书籍尽数归还
+
+![](screenshot/default2.png)
+
+超期未缴纳罚金时，限制借书
+
+![](screenshot/default3.png)
 
 ## 参考资料
 

@@ -54,6 +54,7 @@ const Borrow = (props)=>{
 
     const [isBorrow,setBorrow] = useState(true);
     const [api, contextHolder] = notification.useNotification();
+    const [defaultData,setDefaultData] = useState([])
 
     const openNotificationWithIcon = (type) => {
         api[type]({
@@ -65,6 +66,12 @@ const Borrow = (props)=>{
         api[type]({
             message: '通知信息：',
             description: '借阅失败！库存数量不足！',
+        });
+    };
+    const openNotificationWithIconDefault = (type) => {
+        api[type]({
+            message: '通知信息：',
+            description: '借阅失败！请先还书并缴纳罚金！',
         });
     };
 
@@ -105,7 +112,8 @@ const Borrow = (props)=>{
             name: data.name,
             borrownum:1,
             borrowdate:getCurrentTime(false),
-            shouldreturndate: getCurrentTime(true)
+            shouldreturndate: getCurrentTime(true),
+            timestamp: new Date().getTime()
         }
         // console.log(newValue)
         const zero = data.number
@@ -113,9 +121,14 @@ const Borrow = (props)=>{
             openNotificationWithIconTwice('error')
             return;
         }
-
+        // 前端判断是否存在超期和罚款未缴纳
+        if (defaultData.length > 0) {
+            openNotificationWithIconDefault('error')
+            return;
+        }
+        //
         const res1 = await uniPost('http://127.0.0.1:5000/toborrow', newValue)
-        console.log('res1', res1)
+        // console.log('res1', res1)
 
         openNotificationWithIcon(isBorrow ? 'success' : 'error')
 
@@ -123,6 +136,42 @@ const Borrow = (props)=>{
             setTimeout(() => { window.location.reload() }, 2000)
         }
     }
+    // 预先获取违约数据，裁定能否借书
+    useEffect(() => {
+        const res = {
+            username: window.localStorage.getItem('loggedUser'),
+        }
+        let datadefault;
+        axios.get('http://127.0.0.1:5000/defaultdata', {
+            params: res
+        }).then(response => {
+            datadefault = response.data
+
+            // 计算是否超期
+            const nowtime = new Date().getTime()
+
+            datadefault = datadefault.map(item => {
+                // 判断是否还书
+                let diff;
+                // 已还书，根据归还日期进行计算；否则根据当天日期计算
+                if (item.returntimestamp) {
+                    diff = item.returntimestamp - item.borrowtimestamp
+                } else {
+                    diff = nowtime - item.borrowtimestamp
+                }
+                const diffdays = Math.round(diff / 3600 / 1000 / 24) - 31
+
+                return { overduedays: diffdays, ...item }
+            })
+            // 超期，包含缴纳和未缴纳罚款
+            datadefault = datadefault.filter(item => item.overduedays > 0)
+
+            // 过滤掉缴纳罚款的
+            datadefault = datadefault.filter(item => item.ispayfine == 0)
+
+            setDefaultData(datadefault)
+        })
+    }, [])
 
     return(
         <>
