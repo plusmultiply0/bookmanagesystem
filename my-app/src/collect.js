@@ -123,6 +123,7 @@ const CancelCollect = (props)=>{
         const res1 = await uniPost('http://127.0.0.1:5000/tocollect', newValue)
         messageApi.info(isCollect ? '取消成功！' : '收藏成功！');
         setCollect(!isCollect)
+        setTimeout(() => { window.location.reload() }, 2000)
     };
 
     return (
