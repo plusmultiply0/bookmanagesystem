@@ -116,9 +116,9 @@ def build():
     # 留言板数据
     m = messageboard(username='zjc', text='想看三体Ⅲ，希望能尽快上架QAQ')
     db.session.add(m)
-    m = messageboard(username='沈梦溪', text='希望能借阅《黑客与画家》这本书，心心念念好久了')
+    m = messageboard(username='沈梦溪', text='希望能借阅《黑客与画家》这本书，心心念念好久了😊')
     db.session.add(m)
-    m = messageboard(username='abc', text='什么时候能上架《翦商》，上新书的速度太慢了！！！')
+    m = messageboard(username='abc', text='什么时候能上架《翦商》，上新书的速度太慢了！！！🥲')
     db.session.add(m)
     db.session.commit()
     # 新建图书数据
