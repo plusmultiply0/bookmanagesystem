@@ -1,6 +1,6 @@
 import click
 from libraryms import app,db
-from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,messageboard,bookDefaultRecord
+from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,messageboard,bookDefaultRecord,messageboardparentcomment,messageboardchildcomment
 
 #python shell上下文
 @app.shell_context_processor
@@ -120,6 +120,23 @@ def build():
     db.session.add(m)
     m = messageboard(username='abc', text='什么时候能上架《翦商》，上新书的速度太慢了！！！🥲')
     db.session.add(m)
+    # 留言板评论数据
+    # 父评论
+    m1 = messageboardparentcomment(fromId='zjc',content='想看三体Ⅲ，希望能尽快上架QAQ',likeNum='12',createTime='1672720815000')
+    db.session.add(m1)
+    m1 = messageboardparentcomment(fromId='沈梦溪', content='希望能借阅《黑客与画家》这本书，心心念念好久了😊', likeNum='8',
+                                   createTime='1673947766000')
+    db.session.add(m1)
+    m1 = messageboardparentcomment(fromId='abc', content='什么时候能上架《翦商》，上新书的速度太慢了！！！🥲', likeNum='15',
+                                   createTime='1675491463000')
+    db.session.add(m1)
+    # 子评论
+    m2 = messageboardchildcomment(fromId='zzc', content='同，我也想！', commentId=1,createTime='1672816760000')
+    db.session.add(m2)
+    m2 = messageboardchildcomment(fromId='赵怀真', content='支持！顶！😝', commentId=1, createTime='1674475687000')
+    db.session.add(m2)
+    m2 = messageboardchildcomment(fromId='test', content='对呀！太慢了！！', commentId=3, createTime='1675655361000')
+    db.session.add(m2)
     db.session.commit()
     # 新建图书数据
     b = booknewitem(name='德尔塔的悲剧', author='[日] 浦贺和宏', publish='四川文艺出版社', isbn='9787541164323', price='45.00', number=7, intro='十岁的少年山田信介溺死在公园的水池里，被当作意外落水处理。曾经欺负山田信介的斋木、丹治、绪川三人组生怕惹上嫌疑卷入事件中，从此逐渐疏远。十年后，在死者的忌日这天，三个人也迎来了成人之日，一个自称信介童年好友的神秘男子出现在他们面前，逼迫三人说出当年的真相。从这一天起，他 们将直面自己的罪行。面对男人不依不饶的追问，三人组有的冷静、有的暴躁、有的恐惧，而这时又发生了新的悲剧......', pubdate='2022-11',type='推理')

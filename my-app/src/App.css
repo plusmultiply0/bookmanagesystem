@@ -87,3 +87,54 @@
   color: #1890FF;
   cursor: pointer;
 }
+
+/* 评论区css */
+.childcomment{
+  margin: 5px;
+  margin-left: 20px;
+}
+.parentcomment{
+  margin: 10px;
+  width: 50%;
+}
+
+.parentusr,.childusr{
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.parenttime,.childtime{
+  font-size:12px;
+  color:rgb(134 144 156);
+  margin-left: 10px;
+}
+
+.hr-edge-weak {
+  border: 0;
+  border-top: 1px solid #d0d0d5;
+}
+
+.parentcontent,.childcontent{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.likeicon{
+  margin-right: 3px;
+}
+.likeicon:hover{
+  color: #1890FF;
+  cursor: pointer;
+}
+
+.parentreply{
+  margin-left: 10px;
+}
+.parentreply:hover{
+  cursor: pointer;
+  background:rgb(229 230 235);
+}
+
+.commentreply{
+  margin: 10px;
+}

@@ -5,7 +5,7 @@ from flask import render_template, jsonify, request
 from flask_jwt_extended import create_access_token
 
 from libraryms import db
-from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,messageboard,bookDefaultRecord
+from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,messageboard,bookDefaultRecord,messageboardparentcomment,messageboardchildcomment
 
 import random
 
@@ -486,6 +486,61 @@ def defaultpay():
     db.session.commit()
     return jsonify({"msg": "pay default ok！"})
 
+# 留言板评论功能
+@app.route('/mbcommentdata', methods=["GET"])
+@cross_origin()
+def messagebcdata():
+    res1 = messageboardparentcomment.query.all()
+    res2 = messageboardchildcomment.query.all()
+    response = []
+    for x in res1:
+        item = {"id":x.id,'fromId': x.fromId, "content": x.content,"likeNum":x.likeNum,"createTime":x.createTime,"child":[]}
+        response.append(item)
+    for x in res2:
+        item = {"id":x.id,'fromId': x.fromId, "content": x.content,"commentId":x.commentId,"createTime":x.createTime}
+        for x in response:
+            if x['id'] == item['commentId']:
+                x['child'].append(item)
+    # print(response)
+    return response
+
+@app.route('/addmbcomment', methods=["POST"])
+@cross_origin()
+def addmbcomment():
+    sth = request.json
+    type = sth['type']
+    if type=='parent':
+        fromId = sth['fromId']
+        content = sth['content']
+        createTime = sth['createTime']
+        likeNum = sth['likeNum']
+        nitem = messageboardparentcomment(fromId=fromId, content=content, likeNum=likeNum,
+                                          createTime=createTime)
+    elif type=='child':
+        fromId = sth['fromId']
+        content = sth['content']
+        createTime = sth['createTime']
+        commentId = sth['commentId']
+        nitem = messageboardchildcomment(fromId=fromId, content=content, commentId=commentId,
+                                          createTime=createTime)
+    db.session.add(nitem)
+    db.session.commit()
+    return jsonify({"msg": "add comment ok！"})
+
+@app.route('/mbcommentlike', methods=["POST"])
+@cross_origin()
+def mbcommentlike():
+    sth = request.json
+    type = sth['type']
+    id = sth['id']
+    res1 = messageboardparentcomment.query.all()
+    for x in res1:
+        if x.id==id and type=='like':
+            x.likeNum=x.likeNum+1
+        elif x.id==id and type=='unlike':
+            x.likeNum = x.likeNum - 1
+    db.session.commit()
+    return jsonify({"msg": "like/unlike comment ok！"})
 # -----------------------------------------------------
 
 # 管理员类路由----------------------------------------

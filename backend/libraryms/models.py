@@ -91,3 +91,18 @@ class messageboard(db.Model):
     id=db.Column(db.Integer,primary_key=True,nullable=False,autoincrement=True)
     username = db.Column(db.String(30))
     text = db.Column(db.String(300))
+
+# 留言板评论表
+class messageboardparentcomment(db.Model):
+    id=db.Column(db.Integer,primary_key=True,nullable=False,autoincrement=True)
+    fromId = db.Column(db.String(30))
+    content = db.Column(db.String(300))
+    likeNum = db.Column(db.Integer)
+    createTime = db.Column(db.String(50))
+
+class messageboardchildcomment(db.Model):
+    id=db.Column(db.Integer,primary_key=True,nullable=False,autoincrement=True)
+    commentId = db.Column(db.Integer)
+    fromId = db.Column(db.String(30))
+    content = db.Column(db.String(300))
+    createTime = db.Column(db.String(50))
