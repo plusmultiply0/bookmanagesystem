@@ -10,10 +10,10 @@
 - 用户实现个人信息及密码的更改
 - 实现个人想法的发布和删除
 - 对图书信息的搜索和查看
-- 在留言板留言或查看过往留言，留言支持回复和输入表情
+- 在留言板留言或查看过往留言，留言支持回复和输入表情以及点赞
 - 对图书进行借阅和归还
 - 对图书进行收藏和信息导出
-- 生成用户画像/标签
+- 生成用户画像/标签和图书数据分析图
 - 个性化推荐图书
 
 **管理员用户**
@@ -34,6 +34,8 @@
 - 丰富且较完备的提示信息
 - 提供预览界面（随便逛逛）搜索查看图书信息
 - 图书超期未还会被记录，超期需缴纳罚款并且限制借书
+
+
 
 ## 如何使用本项目
 
@@ -98,9 +100,21 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ![](screenshot/self.png)
 
-个性推荐部分，包含用户画像/标签生成和图书推荐环节
+个性推荐部分，包含用户画像/标签生成、图书类别分析图和图书推荐环节
+
+生成个性图书标签
 
 ![](screenshot/self3.png)
+
+图书数据分析和词云图
+
+![](screenshot/self4.png)
+
+![](screenshot/self5.png)
+
+图书推荐
+
+![](screenshot/self6.png)
 
 无权限访问管理员页面
 
@@ -155,4 +169,5 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 - https://github.com/zhanghuanhao/LibrarySystem
 - https://github.com/lyric777/Book-Management-System
 - https://github.com/plusmultiply0/db-big-assignment
+- https://charts.ant.design/zh/examples/gallery
 

@@ -240,6 +240,43 @@ def userrecommend():
     # print(book)
     return book
 
+@app.route('/userprofilealldata', methods=["GET"])
+@cross_origin()
+def userprofilealldata():
+    sth = request.args
+    username = sth['username']
+    tagarray = []
+    bookarray = []
+    # 统计借阅历史
+    res1 = bookBorrowHistory.query.filter(bookBorrowHistory.borrowusr == username).all()
+    for x in res1:
+        bookarray.append(x.name)
+    # 统计收藏信息
+    res2 = bookCollect.query.filter(bookCollect.username == username).all()
+    for x in res2:
+        res3 = bookitem.query.filter(bookitem.isbn == x.isbn).first()
+        bookarray.append(res3.name)
+    # 统计所有标签
+    for x in bookarray:
+        res4 = bookitem.query.filter(bookitem.name == x).first()
+        tagarray.append(res4.type)
+
+    dict1 = {}
+    result = []
+    for x in tagarray:
+        dict1[x] = dict1.get(x, 0) + 1
+
+    # 取值唯一的数组
+    uniquetagarray = list(set(tagarray))
+    # 拆分字典，每个取值为一个字典并保存在数组中
+    for x in uniquetagarray:
+        subdict = dict([(key,dict1[key]) for key in [x]])
+        # print(list(subdict.keys()))
+        fridict = dict(type=list(subdict.keys())[0],value=list(subdict.values())[0])
+        result.append(fridict)
+    # print(result)
+    return result
+
 # ------------------------------------------------
 
 # 图书类路由-----------------------------------------
@@ -434,29 +471,6 @@ def toaddnewbook():
     db.session.add(newitem)
     db.session.commit()
     return jsonify({"msg": "add new book ok！"})
-
-# 留言板功能
-@app.route('/mbdata', methods=["GET"])
-@cross_origin()
-def messagedata():
-    res1 = messageboard.query.all()
-    response = []
-    for x in res1:
-        item = {'username':x.username,"text":x.text}
-        response.append(item)
-    return response
-
-@app.route('/addmb', methods=["POST"])
-@cross_origin()
-def addmb():
-    sth = request.json
-    # print('msg:', sth)
-    username = sth['username']
-    text = sth['text']
-    nitem = messageboard(username=username, text=text)
-    db.session.add(nitem)
-    db.session.commit()
-    return jsonify({"msg": "ok！"})
 
 # 图书违约
 @app.route('/defaultdata', methods=["GET"])

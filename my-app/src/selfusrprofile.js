@@ -2,6 +2,7 @@ import React ,{ useState, useEffect } from 'react';
 import { Card, Button, Spin, Tag, Divider, message, Space, Table, Modal, Descriptions } from 'antd';
 import axios from 'axios'
 import { Detail, Borrow, Collect, columns } from './bookdata'
+import { Column, WordCloud } from '@ant-design/plots';
 
 // 通用post函数
 const uniPost = async (url, res) => {
@@ -10,8 +11,11 @@ const uniPost = async (url, res) => {
     return response.data
 }
 
+const colorsforpic = ['#F4664A', '#5B8FF9']
+
 const UserProfile = ()=>{
     const [usrdata,setUsrData] = useState([])
+    const [alldata,setAllData] = useState([])
     const [loading, setLoading] = useState(false);
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -40,8 +44,64 @@ const UserProfile = ()=>{
                 });
             }
         })
+        const urlad = 'http://127.0.0.1:5000/userprofilealldata'
+        axios.get(urlad, {
+            params: values
+        }).then(response => {
+            const data = response.data
+            setAllData(data)
+            // console.log('info',data)
+        })
         setLoading(false)
     }
+
+    // 图表配置
+    const config = {
+        data:alldata,
+        xField: 'type',
+        yField: 'value',
+        seriesField: '',
+        color: ({ type }) => {
+            let num = Math.round(Math.random() * 1);
+
+            return colorsforpic[num];
+        },
+        label: {
+            content: (originData) => {
+                const val = parseFloat(originData.value);
+
+                let num = 0;
+                alldata.map((item)=>{
+                    num = num + item.value
+                })
+
+                return (val * 100 / num).toFixed(1) + '%';
+            },
+            offset: 10,
+        },
+        legend: false,
+        xAxis: {
+            label: {
+                autoHide: true,
+                autoRotate: false,
+            },
+        },
+    };
+
+    const configwc = {
+        data:alldata,
+        wordField: 'type',
+        weightField: 'value',
+        colorField: 'type',
+        wordStyle: {
+            fontFamily: 'Verdana',
+            fontSize: [20, 50],
+            rotation: 0,
+        },
+        // 返回值设置成一个 [0, 1) 区间内的值，
+        // 可以让每次渲染的位置相同（前提是每次的宽高一致）。
+        random: () => 0.5,
+    };
 
     return(
         <>
@@ -56,13 +116,25 @@ const UserProfile = ()=>{
                 <Spin spinning={loading} tip="加载中" size="large">
                     <p>用户画像是根据你的借阅和收藏信息，后台生成与你的形象最符合的标签</p>
                     {
-                        usrdata.length?<Divider orientation="left">标签如下：</Divider>:<></>
+                        usrdata.length?<Divider orientation="left">你最可能喜欢的三个标签如下：</Divider>:<></>
                     }
                     {
                         usrdata.map(item => {
                             let num = Math.round(Math.random()*11);
                             return (<Tag color={colors[num]} key={Math.random()}>{item}</Tag>)
                     })
+                    }
+                    {
+                        alldata.length ? <Divider orientation="left">你的图书类别数据分析图如下：</Divider> : <></>
+                    }
+                    {
+                        alldata.length==0?<></>:<Column {...config} />
+                    }
+                    {
+                        alldata.length ? <Divider orientation="left">你的图书类别数据词云图如下：</Divider> : <></>
+                    }
+                    {
+                        alldata.length == 0 ? <></> : <WordCloud {...configwc} />
                     }
                 </Spin>
             </Card>
@@ -73,8 +145,6 @@ const UserProfile = ()=>{
         </>
     )
 }
-
-const testdata = ['推理','文学','历史']
 
 // 11种
 const colors = ["magenta", "red", "volcano", "orange", "gold", "lime", "green", "cyan", "blue", "geekblue", "purple"]
