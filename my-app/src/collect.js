@@ -1,4 +1,4 @@
-import { Button, Table, Input, Space, message } from 'antd'
+import { Button, Table, Input, Space, message, Select } from 'antd'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 
@@ -141,6 +141,8 @@ const CollectList = ()=>{
 
     const [savedata,setsavedata] = useState([])
     const [messageApi, contextHolder] = message.useMessage();
+
+    const [selectdata, setSelectData] = useState('name')
     
     const baseUrl = 'http://127.0.0.1:5000/collectdata'
     const self = window.localStorage.getItem('loggedUser')
@@ -204,7 +206,18 @@ const CollectList = ()=>{
             // 这里保存一个原始数据，便于反复查找使用
             const filterdata = savedata.filter(item => {
                 // console.log(item.value)
-                return item.name.includes(values)
+                // 根据不同选择查找数据
+                if (selectdata == 'name') {
+                    return item.name.includes(values)
+                } else if (selectdata == 'author') {
+                    return item.author.includes(values)
+                } else if (selectdata == 'isbn') {
+                    return item.isbn.includes(values)
+                } else if (selectdata == 'type') {
+                    return item.type.includes(values)
+                } else if (selectdata == 'publisher') {
+                    return item.publish.includes(values)
+                }
             })
             // console.log(filterdata)
             setcollectdata(filterdata)
@@ -213,14 +226,43 @@ const CollectList = ()=>{
         }
     }
 
+    const handleSelectChange = (value) => {
+        setSelectData(value)
+    }
+
     return (
         <>
             {contextHolder}
-            <Search placeholder="输入书名" onSearch={onSearch} onChange={handleChange} enterButton style={{ width: 200, }} />
+            <Select defaultValue="图书名称" style={{ width: 120, }} options={selectoptions} className='bookselector'
+                value={selectdata} onChange={handleSelectChange} />
+            <Search placeholder="请输入..." onSearch={onSearch} onChange={handleChange} enterButton style={{ width: 200, }} />
             <Button type="primary" className="exportBook" ghost onClick={handleexport}>导出图书</Button>
             <Table columns={collectColumns} dataSource={collectdata} locale={{ emptyText: '暂无数据' }} />
         </>
     );
 }
+
+const selectoptions = [
+    {
+        value: 'name',
+        label: '图书名称',
+    },
+    {
+        value: 'author',
+        label: '图书作者',
+    },
+    {
+        value: 'isbn',
+        label: 'ISBN',
+    },
+    {
+        value: 'type',
+        label: '图书类别',
+    },
+    {
+        value: 'publisher',
+        label: '图书出版社',
+    },
+]
 
 export {CollectList}

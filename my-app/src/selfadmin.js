@@ -611,13 +611,13 @@ const Editusr = (props)=>{
                             <Input placeholder={data.username} disabled/>
                         </Form.Item>
                         <Form.Item label="性别" name="sex">
-                            <Input placeholder={data.sex} />
+                            <Input defaultValue={data.sex}/>
                         </Form.Item>
                         <Form.Item label="电话号码" name="tel">
-                            <Input placeholder={data.tel} />
+                            <Input defaultValue={data.tel} />
                         </Form.Item>
                         <Form.Item label="个人简介" name="intro">
-                            <TextArea rows={4} maxLength={500} placeholder={data.intro} />
+                            <TextArea rows={4} maxLength={500} defaultValue={data.intro} />
                         </Form.Item>
                     </Form>
                 </Modal>

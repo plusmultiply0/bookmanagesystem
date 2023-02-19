@@ -298,6 +298,7 @@ def tocollect():
     username = sth['username']
     isbn = sth['isbn']
     iscollect = sth['isCollect']
+    # 前面为要收藏，后面为已收藏取消收藏
     if not iscollect:
         # 先找书的所有收藏信息
         res1 = bookCollect.query.filter(bookCollect.isbn == isbn).all()

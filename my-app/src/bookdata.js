@@ -1,4 +1,4 @@
-import { Button, Space, Modal, Descriptions, notification, message, Table, Input, Form } from "antd"
+import { Button, Space, Modal, Descriptions, notification, message, Table, Input, Form, Select } from "antd"
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 
@@ -226,6 +226,8 @@ const BookList = ()=>{
     const [bookData,setBookData] = useState([])
     const [savedata,setSaveData] = useState([])
 
+    const [selectdata,setSelectData] = useState('name')
+
     useEffect(()=>{
         // console.log('effect')
         axios.get(baseUrl).then(response => {
@@ -257,7 +259,19 @@ const BookList = ()=>{
             // 这里保存一个原始数据，便于反复查找使用
             const filterdata = savedata.filter(item => {
                 // console.log(item.value)
-                return item.name.includes(values)
+                // 根据不同选择查找数据
+                if (selectdata=='name'){
+                    return item.name.includes(values)
+                } else if (selectdata == 'author'){
+                    return item.author.includes(values)
+                } else if (selectdata == 'isbn') {
+                    return item.isbn.includes(values)
+                } else if (selectdata == 'type') {
+                    return item.type.includes(values)
+                } else if (selectdata == 'publisher') {
+                    return item.publish.includes(values)
+                }
+                
             })
             // console.log(filterdata)
             setBookData(filterdata)
@@ -266,14 +280,42 @@ const BookList = ()=>{
         }
     }
 
+    const handleSelectChange = (value)=>{
+        setSelectData(value)
+    }
+
     return(
         <>
-            <Search placeholder="输入书名" onSearch={onSearch} onChange={handleChange} enterButton style={{width: 200,}} />
+            <Select defaultValue="图书名称" style={{ width: 120, }} options={selectoptions} className='bookselector' 
+            value={selectdata} onChange={handleSelectChange}/>
+            <Search placeholder="请输入..." onSearch={onSearch} onChange={handleChange} enterButton style={{width: 200,}} />
             <Table columns={columns} dataSource={bookData} locale={{ emptyText: '暂无数据' }} />
         </>
     );
 }
 
+const selectoptions = [
+    {
+        value: 'name',
+        label: '图书名称',
+    },
+    {
+        value: 'author',
+        label: '图书作者',
+    },
+    {
+        value: 'isbn',
+        label: 'ISBN',
+    },
+    {
+        value: 'type',
+        label: '图书类别',
+    },
+    {
+        value: 'publisher',
+        label: '图书出版社',
+    },
+]
 
 
 const columns = [

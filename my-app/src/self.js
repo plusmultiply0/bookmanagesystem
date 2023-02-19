@@ -151,13 +151,13 @@ const EditSelf = (props)=>{
                         <Input placeholder={data.username} disabled/>
                     </Form.Item>
                     <Form.Item label="电话号码" name="tel">
-                        <Input placeholder={data.tel} value={infoTel} onChange={handleTel}/>
+                        <Input defaultValue={data.tel} value={infoTel} onChange={handleTel}/>
                     </Form.Item>
                     <Form.Item label="性别" name="sex">
                         <Input placeholder={data.sex} disabled/>
                     </Form.Item>
                     <Form.Item label="个人简介" name="intro">
-                        <TextArea rows={4} placeholder={data.intro} maxLength={120} value={infoMsg} onChange={handleMsg }/>
+                        <TextArea rows={4} defaultValue={data.intro} maxLength={120} value={infoMsg} onChange={handleMsg }/>
                     </Form.Item>
                 </Form>
             </Modal>
