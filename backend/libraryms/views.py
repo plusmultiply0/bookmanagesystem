@@ -607,6 +607,32 @@ def usrdata():
             response.append(item)
     return response
 
+@app.route('/usrsexdata', methods=["GET"])
+@cross_origin()
+def usrsexdata():
+    res1 = normalusr.query.all()
+    response = []
+    sexarray = []
+    for x in res1:
+        res2 = usrinfo.query.filter(usrinfo.username == x.username).all()
+        for y in res2:
+            sexarray.append(y.sex)
+    # print(sexarray)
+    dict1={}
+    for x in sexarray:
+        dict1[x] = dict1.get(x, 0) + 1
+    # 取值唯一的数组
+    uniquetagarray = list(set(sexarray))
+    # 拆分字典，每个取值为一个字典并保存在数组中
+    for x in uniquetagarray:
+        subdict = dict([(key, dict1[key]) for key in [x]])
+        # print(list(subdict.keys()))
+        fridict = dict(type=list(subdict.keys())[0], value=list(subdict.values())[0])
+        response.append(fridict)
+    # print(response)
+    return response
+
+
 @app.route('/usrcollectdata', methods=["GET"])
 @cross_origin()
 def usrcollectdata():

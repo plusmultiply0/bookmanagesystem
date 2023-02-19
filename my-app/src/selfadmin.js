@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form, Input, Typography, Result, Space, Table, notification, message } from 'antd';
-
+import { Button, Modal, Form, Input, Typography, Result, Space, Table, notification, message, Divider } from 'antd';
+import { Pie } from '@ant-design/plots';
 import axios from 'axios'
 
 import { Detail } from './bookdata'
@@ -442,6 +442,8 @@ const ReaderManage = () => {
     const [usrcollectdata, setUsrCollectData] = useState([])
     const [usrborrowdata, setUsrBorrowData] = useState([])
 
+    const [usrsexdata,setUsrSexData] = useState([])
+
     useEffect(() => {
         // console.log('effect')
         axios.get('http://127.0.0.1:5000/usrdata').then(response => {
@@ -460,14 +462,44 @@ const ReaderManage = () => {
             setUsrBorrowData(data)
         })
 
+        // 获取性别数据
+        axios.get('http://127.0.0.1:5000/usrsexdata').then(response => {
+            const data = response.data
+            // console.log('borrow data:', data)
+            setUsrSexData(data)
+        })
+
     }, [])
     //只在第一次渲染时运行
+
+    const sexconfig = {
+        appendPadding: 10,
+        data: usrsexdata,
+        angleField: 'value',
+        colorField: 'type',
+        radius: 0.8,
+        label: {
+            type: 'outer',
+            content: '{name} {percentage}',
+        },
+        interactions: [
+            {
+                type: 'pie-legend-active',
+            },
+            {
+                type: 'element-active',
+            },
+        ],
+    };
 
     return (
         isAdmin ?
             <>
                 <Title>读者信息</Title>
                 <Table columns={usrcolumns} dataSource={usrdata} locale={{ emptyText: '暂无数据' }} />
+                {
+                    usrsexdata.length ? <><Divider orientation="left">读者性别统计数据分析图如下：</Divider><Pie {...sexconfig} /></> : <></>
+                }
                 <Title>图书收藏信息</Title>
                 <Table columns={usrcollectcolumns} dataSource={usrcollectdata} locale={{ emptyText: '暂无数据' }} />
                 <Title>图书借阅信息</Title>
