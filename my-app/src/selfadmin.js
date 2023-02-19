@@ -506,6 +506,12 @@ const usrcolumns = [
         key: 'intro',
     },
     {
+        title: '图书偏好',
+        dataIndex: 'like',
+        key: 'like',
+        render: (price) => price?price:'暂无数据'
+    },
+    {
         title: '操作',
         key: 'action',
         render: (_, record) => (

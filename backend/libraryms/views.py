@@ -567,7 +567,43 @@ def usrdata():
     for x in res1:
         res2 = usrinfo.query.filter(usrinfo.username == x.username).all()
         for y in res2:
-            item = {"id":y.uid,"key":y.uid,"username":y.username,"tel":y.tel,"sex":y.sex,"intro":y.intro}
+            tagarray = []
+            bookarray = []
+            # 统计借阅历史
+            res1 = bookBorrowHistory.query.filter(bookBorrowHistory.borrowusr == y.username).all()
+            for x in res1:
+                bookarray.append(x.name)
+            # 统计收藏信息
+            res2 = bookCollect.query.filter(bookCollect.username == y.username).all()
+            for x in res2:
+                res3 = bookitem.query.filter(bookitem.isbn == x.isbn).first()
+                bookarray.append(res3.name)
+            # 统计所有标签
+            for x in bookarray:
+                res4 = bookitem.query.filter(bookitem.name == x).first()
+                tagarray.append(res4.type)
+            # print(bookarray)
+            # print(tagarray)
+            # 计算出数量最多的3个标签
+            dict = {}
+            tag = []
+            for x in tagarray:
+                dict[x] = dict.get(x, 0) + 1
+            # print(dict)
+            if len(dict) > 3:
+                while (len(tag) < 3):
+                    tag.append(max(dict, key=dict.get))
+                    dict.pop(max(dict, key=dict.get))
+            else:
+                for key in dict:
+                    tag.append(key)
+            # print(tag)
+            # 取偏好的最大值
+            if len(tag):
+                liketag=tag[0]
+            else:
+                liketag =''
+            item = {"id":y.uid,"key":y.uid,"username":y.username,"tel":y.tel,"sex":y.sex,"intro":y.intro,"like":liketag}
             response.append(item)
     return response
 
@@ -580,7 +616,7 @@ def usrcollectdata():
         res2 = bookitem.query.filter(bookitem.isbn == x.isbn).first()
         item = {"key":random.random(),"username":x.username,"name":res2.name,"author":res2.author}
         response.append(item)
-    print(response)
+    # print(response)
     return response
 
 @app.route('/usrborrowdata', methods=["GET"])
@@ -591,7 +627,7 @@ def usrborrowdata():
     for x in res1:
         item = {"key":x.id,"borrowusr":x.borrowusr,"name":x.name,"borrowdate":x.borrowdate,"returndate":x.returndate}
         response.append(item)
-    print(response)
+    # print(response)
     return response
 
 @app.route('/toeditusr', methods=["POST"])
