@@ -1,11 +1,11 @@
 import click
 from libraryms import app,db
-from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,messageboard,bookDefaultRecord,messageboardparentcomment,messageboardchildcomment
+from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,bookDefaultRecord,messageboardparentcomment,messageboardchildcomment
 
 #python shell上下文
 @app.shell_context_processor
 def make_shell_context():
-    return dict(db=db,normalusr=normalusr,adminusr=adminusr,usrinfo=usrinfo,usridea=usridea,bookitem=bookitem,bookCollect=bookCollect,bookBorrow=bookBorrow,bookBorrowHistory=bookBorrowHistory,booknewitem=booknewitem)
+    return dict(db=db,normalusr=normalusr,adminusr=adminusr,usrinfo=usrinfo,usridea=usridea,bookitem=bookitem,bookCollect=bookCollect,bookBorrow=bookBorrow,bookBorrowHistory=bookBorrowHistory,booknewitem=booknewitem,bookDefaultRecord=bookDefaultRecord,messageboardparentcomment=messageboardparentcomment,messageboardchildcomment=messageboardchildcomment)
 
 # 初始化数据库，建表
 @app.cli.command()
@@ -51,6 +51,10 @@ def build():
     db.session.add(m1)
     m11 = usrinfo(username='asd', tel='19217744333', sex='男性', intro='我是测试账号！')
     db.session.add(m11)
+    m1 = normalusr(username='海月', password='123456')
+    db.session.add(m1)
+    m11 = usrinfo(username='海月', tel='15416622333', sex='其他', intro='我是未知生物')
+    db.session.add(m11)
     # 用户收藏数据
     m = bookCollect(username='沈梦溪',isbn='9787544258609')
     db.session.add(m)
@@ -62,6 +66,33 @@ def build():
     db.session.add(m)
     m = bookCollect(username='zjc', isbn='9787536484276')
     db.session.add(m)
+    # 白夜行
+    m = bookCollect(username='zjc', isbn='9787544258609')
+    db.session.add(m)
+    m = bookCollect(username='test', isbn='9787544258609')
+    db.session.add(m)
+    m = bookCollect(username='asd', isbn='9787544258609')
+    db.session.add(m)
+    m = bookCollect(username='赵怀真', isbn='9787544258609')
+    db.session.add(m)
+    # 置身事内
+    m = bookCollect(username='沈梦溪',isbn='9787208171336')
+    db.session.add(m)
+    m = bookCollect(username='zjc', isbn='9787208171336')
+    db.session.add(m)
+    m = bookCollect(username='test', isbn='9787208171336')
+    db.session.add(m)
+    # 始于极限
+    m = bookCollect(username='赵怀真', isbn='9787513349369')
+    db.session.add(m)
+    m = bookCollect(username='asd', isbn='9787513349369')
+    db.session.add(m)
+    # 射雕英雄传
+    m = bookCollect(username='沈梦溪',isbn='9787108012586')
+    db.session.add(m)
+    m = bookCollect(username='zjc', isbn='9787108012586')
+    db.session.add(m)
+
     # 用户借阅数据
     m1 = bookBorrow(name='白夜行',borrowusr='zjc',borrownum=1,borrowdate='2022-12-28',shouldreturndate='2023-01-28')
     m2 = bookBorrowHistory(name='白夜行',borrowusr='zjc',borrowdate='2022-12-28',returndate='')
@@ -98,6 +129,43 @@ def build():
     db.session.add(m1)
     db.session.add(m2)
     db.session.add(m3)
+    # 天龙八部
+    m1 = bookBorrow(name='天龙八部', borrowusr='沈梦溪', borrownum=1, borrowdate='2023-01-16', shouldreturndate='2023-02-16')
+    m2 = bookBorrowHistory(name='天龙八部', borrowusr='沈梦溪', borrowdate='2023-01-16', returndate='')
+    m3 = bookDefaultRecord(name='天龙八部', borrowusr='沈梦溪', borrowdate='2023-01-16', shouldreturndate='2023-02-16',
+                           number=1, borrowtimestamp='1673827200000', ispayfine=0, isreturnbook=0)
+    db.session.add(m1)
+    db.session.add(m2)
+    db.session.add(m3)
+    m1 = bookBorrow(name='天龙八部', borrowusr='赵怀真', borrownum=1, borrowdate='2023-01-12', shouldreturndate='2023-02-12')
+    m2 = bookBorrowHistory(name='天龙八部', borrowusr='赵怀真', borrowdate='2023-01-12', returndate='')
+    m3 = bookDefaultRecord(name='天龙八部', borrowusr='赵怀真', borrowdate='2023-01-12', shouldreturndate='2023-02-12',
+                           number=1, borrowtimestamp='1673481600000', ispayfine=0, isreturnbook=0)
+    db.session.add(m1)
+    db.session.add(m2)
+    db.session.add(m3)
+    m1 = bookBorrow(name='天龙八部', borrowusr='test', borrownum=1, borrowdate='2023-01-12', shouldreturndate='2023-02-12')
+    m2 = bookBorrowHistory(name='天龙八部', borrowusr='test', borrowdate='2023-01-12', returndate='')
+    m3 = bookDefaultRecord(name='天龙八部', borrowusr='test', borrowdate='2023-01-12', shouldreturndate='2023-02-12',
+                           number=1, borrowtimestamp='1673481600000', ispayfine=0, isreturnbook=0)
+    db.session.add(m1)
+    db.session.add(m2)
+    db.session.add(m3)
+    # 球状闪电
+    m1 = bookBorrow(name='球状闪电', borrowusr='沈梦溪', borrownum=1, borrowdate='2023-01-16', shouldreturndate='2023-02-16')
+    m2 = bookBorrowHistory(name='球状闪电', borrowusr='沈梦溪', borrowdate='2023-01-16', returndate='')
+    m3 = bookDefaultRecord(name='球状闪电', borrowusr='沈梦溪', borrowdate='2023-01-16', shouldreturndate='2023-02-16',
+                           number=1, borrowtimestamp='1673827200000', ispayfine=0, isreturnbook=0)
+    db.session.add(m1)
+    db.session.add(m2)
+    db.session.add(m3)
+    m1 = bookBorrow(name='球状闪电', borrowusr='赵怀真', borrownum=1, borrowdate='2023-01-12', shouldreturndate='2023-02-12')
+    m2 = bookBorrowHistory(name='球状闪电', borrowusr='赵怀真', borrowdate='2023-01-12', returndate='')
+    m3 = bookDefaultRecord(name='球状闪电', borrowusr='赵怀真', borrowdate='2023-01-12', shouldreturndate='2023-02-12',
+                           number=1, borrowtimestamp='1673481600000', ispayfine=0, isreturnbook=0)
+    db.session.add(m1)
+    db.session.add(m2)
+    db.session.add(m3)
 
     # 常用用户数据
     m11 = usrinfo(username='zjc', tel='13512345678', sex='男性')
@@ -113,13 +181,6 @@ def build():
     db.session.add(mzjc3)
     db.session.add(mzzc1)
     db.session.commit()
-    # 留言板数据
-    m = messageboard(username='zjc', text='想看三体Ⅲ，希望能尽快上架QAQ')
-    db.session.add(m)
-    m = messageboard(username='沈梦溪', text='希望能借阅《黑客与画家》这本书，心心念念好久了😊')
-    db.session.add(m)
-    m = messageboard(username='abc', text='什么时候能上架《翦商》，上新书的速度太慢了！！！🥲')
-    db.session.add(m)
     # 留言板评论数据
     # 父评论
     m1 = messageboardparentcomment(fromId='zjc',content='想看三体Ⅲ，希望能尽快上架QAQ',likeNum='12',createTime='1672720815000')

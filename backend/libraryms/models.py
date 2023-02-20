@@ -86,12 +86,6 @@ class booknewitem(db.Model):
     pubdate=db.Column(db.String(30))
     type = db.Column(db.String(30))
 
-# 留言板留言内容表
-class messageboard(db.Model):
-    id=db.Column(db.Integer,primary_key=True,nullable=False,autoincrement=True)
-    username = db.Column(db.String(30))
-    text = db.Column(db.String(300))
-
 # 留言板评论表
 class messageboardparentcomment(db.Model):
     id=db.Column(db.Integer,primary_key=True,nullable=False,autoincrement=True)

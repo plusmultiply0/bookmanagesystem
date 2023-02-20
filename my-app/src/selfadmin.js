@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Input, Typography, Result, Space, Table, notification, message, Divider } from 'antd';
-import { Pie } from '@ant-design/plots';
+import { Pie, Column } from '@ant-design/plots';
 import axios from 'axios'
 
 import { Detail } from './bookdata'
@@ -443,6 +443,8 @@ const ReaderManage = () => {
     const [usrborrowdata, setUsrBorrowData] = useState([])
 
     const [usrsexdata,setUsrSexData] = useState([])
+    const [usrcollectanalysisdata,setCollectAnalysisData] = useState([])
+    const [usrborrowanalysisdata,setBorrowAnalysisData] = useState([])
 
     useEffect(() => {
         // console.log('effect')
@@ -469,6 +471,20 @@ const ReaderManage = () => {
             setUsrSexData(data)
         })
 
+        // 获取图书收藏排行数据
+        axios.get('http://127.0.0.1:5000/usrcollectanalysisdata').then(response => {
+            const data = response.data
+            // console.log('data:', data)
+            setCollectAnalysisData(data)
+        })
+
+        // 获取图书借阅排行数据
+        axios.get('http://127.0.0.1:5000/usrborrowanalysisdata').then(response => {
+            const data = response.data
+            // console.log('data:', data)
+            setBorrowAnalysisData(data)
+        })
+
     }, [])
     //只在第一次渲染时运行
 
@@ -492,6 +508,73 @@ const ReaderManage = () => {
         ],
     };
 
+    // 
+    const colorsforpic = ['#F4664A', '#5B8FF9']
+
+    const collectconfig = {
+        data: usrcollectanalysisdata,
+        xField: 'type',
+        yField: 'value',
+        seriesField: '',
+        color: ({ type }) => {
+            let num = Math.round(Math.random() * 1);
+            return colorsforpic[num];
+        },
+        label: {
+            content: (originData) => {
+                const val = parseFloat(originData.value);
+
+                let num = 0;
+                usrcollectanalysisdata.map((item) => {
+                    num = num + item.value
+                })
+
+                return (val * 100/num).toFixed(1) + '%';
+                
+            },
+            offset: 10,
+        },
+        legend: false,
+        xAxis: {
+            label: {
+                autoHide: true,
+                autoRotate: false,
+            },
+        },
+    };
+
+    const borrowconfig = {
+        data: usrborrowanalysisdata,
+        xField: 'type',
+        yField: 'value',
+        seriesField: '',
+        color: ({ type }) => {
+            let num = Math.round(Math.random() * 1);
+            return colorsforpic[num];
+        },
+        label: {
+            content: (originData) => {
+                const val = parseFloat(originData.value);
+
+                let num = 0;
+                usrborrowanalysisdata.map((item) => {
+                    num = num + item.value
+                })
+
+                return (val * 100 / num).toFixed(1) + '%';
+
+            },
+            offset: 10,
+        },
+        legend: false,
+        xAxis: {
+            label: {
+                autoHide: true,
+                autoRotate: false,
+            },
+        },
+    };
+
     return (
         isAdmin ?
             <>
@@ -502,8 +585,14 @@ const ReaderManage = () => {
                 }
                 <Title>图书收藏信息</Title>
                 <Table columns={usrcollectcolumns} dataSource={usrcollectdata} locale={{ emptyText: '暂无数据' }} />
+                {
+                    usrcollectanalysisdata.length ? <><Divider orientation="left">图书收藏前十位的数据分析图如下：</Divider><Column {...collectconfig} /></> : <></>
+                }
                 <Title>图书借阅信息</Title>
                 <Table columns={usrborrowcolumns} dataSource={usrborrowdata} locale={{ emptyText: '暂无数据' }} />
+                {
+                    usrborrowanalysisdata.length ? <><Divider orientation="left">图书借阅前十位的数据分析图如下：</Divider><Column {...borrowconfig} /></> : <></>
+                }
             </>
             : <PermissionError />
     );

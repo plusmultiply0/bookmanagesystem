@@ -5,7 +5,7 @@ from flask import render_template, jsonify, request
 from flask_jwt_extended import create_access_token
 
 from libraryms import db
-from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,messageboard,bookDefaultRecord,messageboardparentcomment,messageboardchildcomment
+from libraryms.models import normalusr,adminusr,usrinfo,usridea,bookitem,bookCollect,bookBorrow,bookBorrowHistory,booknewitem,bookDefaultRecord,messageboardparentcomment,messageboardchildcomment
 
 import random
 
@@ -645,6 +645,35 @@ def usrcollectdata():
     # print(response)
     return response
 
+@app.route('/usrcollectanalysisdata', methods=["GET"])
+@cross_origin()
+def usrcollectanalysisdata():
+    res1 = bookCollect.query.all()
+    booknamearray = []
+    response = []
+    for x in res1:
+        res2 = bookitem.query.filter(bookitem.isbn == x.isbn).first()
+        booknamearray.append(res2.name)
+    # 取值唯一的数组
+    uniquetagarray = list(set(booknamearray))
+    dict1 = {}
+    for x in booknamearray:
+        dict1[x] = dict1.get(x, 0) + 1
+    for x in uniquetagarray:
+        subdict = dict([(key, dict1[key]) for key in [x]])
+        # print(list(subdict.keys()))
+        fridict = dict(type=list(subdict.keys())[0], value=list(subdict.values())[0])
+        response.append(fridict)
+    response.sort(key=getnum,reverse=True)
+    if len(response)>10:
+        response = response[:10]
+    # print(response)
+    return response
+
+# 排序函数
+def getnum(e):
+    return e['value']
+
 @app.route('/usrborrowdata', methods=["GET"])
 @cross_origin()
 def usrborrowdata():
@@ -653,6 +682,30 @@ def usrborrowdata():
     for x in res1:
         item = {"key":x.id,"borrowusr":x.borrowusr,"name":x.name,"borrowdate":x.borrowdate,"returndate":x.returndate}
         response.append(item)
+    # print(response)
+    return response
+
+@app.route('/usrborrowanalysisdata', methods=["GET"])
+@cross_origin()
+def usrborrowanalysisdata():
+    res1 = bookBorrowHistory.query.all()
+    booknamearray = []
+    response = []
+    for x in res1:
+        booknamearray.append(x.name)
+    # 取值唯一的数组
+    uniquetagarray = list(set(booknamearray))
+    dict1 = {}
+    for x in booknamearray:
+        dict1[x] = dict1.get(x, 0) + 1
+    for x in uniquetagarray:
+        subdict = dict([(key, dict1[key]) for key in [x]])
+        # print(list(subdict.keys()))
+        fridict = dict(type=list(subdict.keys())[0], value=list(subdict.values())[0])
+        response.append(fridict)
+    response.sort(key=getnum,reverse=True)
+    if len(response)>10:
+        response = response[:10]
     # print(response)
     return response
 
