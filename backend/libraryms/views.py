@@ -556,6 +556,35 @@ def mbcommentlike():
             x.likeNum = x.likeNum - 1
     db.session.commit()
     return jsonify({"msg": "like/unlike comment ok！"})
+
+@app.route('/deletembcomment', methods=["POST"])
+@cross_origin()
+def deletembcomment():
+    sth = request.json
+    type = sth['type']
+    createTime = sth['createTime']
+    fromId = sth['fromId']
+    if type=='parent':
+        # 父评论直接根据id查找，前端生成的id与后端不匹配
+        # 基于fromid和时间戳
+        res1 = messageboardparentcomment.query.filter(messageboardparentcomment.fromId == fromId).all()
+        for x in res1:
+            if x.createTime == createTime:
+                pid = x.id
+                # 删除父评论下的子评论
+                res2 = messageboardchildcomment.query.filter(messageboardchildcomment.commentId == pid).all()
+                for y in res2:
+                    db.session.delete(y)
+                db.session.delete(x)
+
+    elif type=='child':
+        res3 = messageboardchildcomment.query.filter(messageboardchildcomment.fromId == fromId).all()
+        for x in res3:
+            if x.createTime == createTime:
+                db.session.delete(x)
+
+    db.session.commit()
+    return jsonify({"msg": "delete comment ok！"})
 # -----------------------------------------------------
 
 # 管理员类路由----------------------------------------

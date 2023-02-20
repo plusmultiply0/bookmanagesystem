@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Descriptions, Button, Modal, Form, Input, Typography, List, Skeleton, message, Space,Row,Col } from 'antd';
-import { LaptopOutlined, SmileOutlined, BookOutlined, AppstoreOutlined, LikeOutlined, LikeFilled } from '@ant-design/icons';
+import { LaptopOutlined, SmileOutlined, BookOutlined, AppstoreOutlined, LikeOutlined, LikeFilled, DeleteOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import axios from 'axios'
 
 const { TextArea } = Input;
@@ -263,6 +263,8 @@ const MyComment = (props)=>{
     )
 }
 
+const { confirm } = Modal;
+
 const BaseComemnt = (props)=>{
 
     let it = props.item
@@ -272,7 +274,11 @@ const BaseComemnt = (props)=>{
     let setComments = props.setComments
     let keyid = props.keyid
 
+    const admin = window.localStorage.getItem('admin')
+    const [isAdmin, setAdmin] = useState(admin)
+
     const [state,setState] = useState(it)
+    // console.log(state)
     const [click, setClick] = useState(false)
 
     const [content,setContent] = useState('')
@@ -320,18 +326,12 @@ const BaseComemnt = (props)=>{
 
     // 提交评论
     const handleClick = async()=>{
-        let num = 1;
-        comments.map((item)=>{
-            if(item.id==keyid){
-                item.child.map((item)=>{
-                    num++;
-                })
-            }
-        })
+        
+        // console.log(comments)
         
         const self = window.localStorage.getItem('loggedUser')
         const newcomment = {
-            id: num,
+            id: state.child.length+1,
             commentId: keyid,
             fromId: self,
             content: content,
@@ -339,7 +339,7 @@ const BaseComemnt = (props)=>{
         }
         // console.log(newcomment)
 
-        let newco = { ...it ,child:[...it.child,newcomment]}
+        let newco = { ...state ,child:[...state.child,newcomment]}
         // console.log(newco)
         // 转变思路，直接改变当前组件状态，不去改变上级状态
         setState(newco)
@@ -348,15 +348,15 @@ const BaseComemnt = (props)=>{
         setContent('')
         setReplyClick(false)
 
-        messageApi.open({
-            type: 'success',
-            content: '发布成功！',
-        });
-
         // 发送至后端
         const send = { ...newcomment, type: 'child' }
         const url = 'http://127.0.0.1:5000/addmbcomment'
         const res1 = await uniPost(url, send)
+
+        messageApi.open({
+            type: 'success',
+            content: '发布成功！',
+        });
     }
 
     const handlereplyclick = ()=>{
@@ -365,19 +365,98 @@ const BaseComemnt = (props)=>{
         setReplyClick(!replyclick)
     }
 
+    const delurl = 'http://127.0.0.1:5000/deletembcomment'
+
+    const handleparentdelete =()=>{
+        
+        confirm({
+            title: '提示',
+            icon: <ExclamationCircleFilled />,
+            content: '确定删除吗？',
+            okText: '确定',
+            cancelText: '取消',
+            async onOk() {
+                // 发送至后端
+                const send = {
+                    type: 'parent',
+                    id: state.id,
+                    createTime: String(state.createTime),
+                    fromId:state.fromId,
+                }
+                // console.log(send)
+                const res1 = await uniPost(delurl, send)
+
+                // 本地状态置空实现删除
+                setState({
+                    fromId: '',
+                    createTime: '',
+                    content: '',
+                    likeNum: 0,
+                    child: []
+                })
+
+                messageApi.open({
+                    type: 'success',
+                    content: '删除成功！',
+                });
+            },
+            onCancel() {
+            },
+        }); 
+    }
+
+    const handlechilddelete = (id)=>{
+        const filtergroup = state.child.filter((item)=>item.id!=id)
+        const filterchild = state.child.filter((item) => item.id == id)
+        confirm({
+            title: '提示',
+            icon: <ExclamationCircleFilled />,
+            content: '确定删除吗？',
+            okText: '确定',
+            cancelText: '取消',
+            async onOk() {
+                setState({ ...state, child: filtergroup })
+
+                // 发送至后端
+                const send = {
+                    type: 'child',
+                    createTime: String(filterchild[0].createTime),
+                    fromId: filterchild[0].fromId,
+                }
+                // console.log(send)
+                const res1 = await uniPost(delurl, send)
+
+                messageApi.open({
+                    type: 'success',
+                    content: '删除成功！',
+                });
+            },
+            onCancel() {
+            },
+        });
+    }
+
     return (
         <>
             {contextHolder}
         <div className='parentcomment'>
-            <span className='parentusr'>{state.fromId + ' 说'}</span><span className='parenttime'>{timetrans(Number(state.createTime))}</span>
-            <div className='parentcontent'>{state.content}</div>
-            <div>
-                <span className='likeicon' onClick={handlelikeclick}>
-                    {click ? <LikeFilled /> : <LikeOutlined />}
-                </span>
-                {state.likeNum}
-                <span className='parentreply' onClick={handlereplyclick}>{replyclick ?'取消':'回复'}</span>
-            </div>
+            {
+                    state.fromId &&
+            <>
+                <span className='parentusr'>{state.fromId + ' 说'}</span><span className='parenttime'>{timetrans(Number(state.createTime))}</span>
+                <div className='parentcontent'>{state.content}</div>
+                <div>
+                    <span className='likeicon' onClick={handlelikeclick}>
+                        {click ? <LikeFilled /> : <LikeOutlined />}
+                    </span>
+                    {state.likeNum}
+                    <span className='parentreply' onClick={handlereplyclick}>{replyclick ?'取消':'回复'}</span>
+                    {
+                        isAdmin&&<span className='parentdelete' onClick={handleparentdelete}>{<DeleteOutlined/>}</span>
+                    }
+                </div>
+            </>
+            }
             <div className='commentreply' style={{display:replystate?'block':'none'}}>
                 <TextArea showCount maxLength={100} autoSize={{
                     minRows: 3,
@@ -392,12 +471,17 @@ const BaseComemnt = (props)=>{
                     return (
                         <div className='childcomment' key={item.id}>
                             <span className='childusr'>{item.fromId}</span><span className='childtime'>{timetrans(Number(item.createTime))}</span>
+                            {
+                                isAdmin&&<span className='childdelete' onClick={() => { handlechilddelete(item.id)}}>{<DeleteOutlined />}</span>
+                            }
                             <div className='childcontent'>{item.content}</div>
                         </div>
                     )
                 })
             }
-            <hr className="hr-edge-weak"></hr>
+            {
+                    state.fromId && <hr className="hr-edge-weak"></hr>
+            }
         </div>
         </>
     )

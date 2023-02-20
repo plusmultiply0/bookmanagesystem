@@ -142,3 +142,15 @@
 .bookselector{
   margin-right: 20px;
 }
+
+/* 删除 */
+.parentdelete{
+  margin-left: 15px;
+}
+.childdelete{
+  margin-left: 10px;
+}
+.parentdelete:hover,.childdelete:hover{
+    color: #1890FF;
+    cursor: pointer;
+}
