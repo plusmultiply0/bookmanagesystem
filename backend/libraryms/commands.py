@@ -183,13 +183,13 @@ def build():
     db.session.commit()
     # 留言板评论数据
     # 父评论
-    m1 = messageboardparentcomment(fromId='zjc',content='想看三体Ⅲ，希望能尽快上架QAQ',likeNum='12',createTime='1672720815000')
+    m1 = messageboardparentcomment(fromId='zjc',content='想看三体Ⅲ，希望能尽快上架QAQ',likeNum='12',createTime='1672720815000',settop=0)
     db.session.add(m1)
     m1 = messageboardparentcomment(fromId='沈梦溪', content='希望能借阅《黑客与画家》这本书，心心念念好久了😊', likeNum='8',
-                                   createTime='1673947766000')
+                                   createTime='1673947766000',settop=0)
     db.session.add(m1)
     m1 = messageboardparentcomment(fromId='abc', content='什么时候能上架《翦商》，上新书的速度太慢了！！！🥲', likeNum='15',
-                                   createTime='1675491463000')
+                                   createTime='1675491463000',settop=0)
     db.session.add(m1)
     # 子评论
     m2 = messageboardchildcomment(fromId='zzc', content='同，我也想！', commentId=1,createTime='1672816760000')

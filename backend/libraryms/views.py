@@ -509,7 +509,7 @@ def messagebcdata():
     res2 = messageboardchildcomment.query.all()
     response = []
     for x in res1:
-        item = {"id":x.id,'fromId': x.fromId, "content": x.content,"likeNum":x.likeNum,"createTime":x.createTime,"child":[]}
+        item = {"id":x.id,'fromId': x.fromId, "content": x.content,"likeNum":x.likeNum,"createTime":x.createTime,"settop":x.settop,"child":[]}
         response.append(item)
     for x in res2:
         item = {"id":x.id,'fromId': x.fromId, "content": x.content,"commentId":x.commentId,"createTime":x.createTime}
@@ -529,7 +529,8 @@ def addmbcomment():
         content = sth['content']
         createTime = sth['createTime']
         likeNum = sth['likeNum']
-        nitem = messageboardparentcomment(fromId=fromId, content=content, likeNum=likeNum,
+        settop = sth['settop']
+        nitem = messageboardparentcomment(fromId=fromId, content=content, likeNum=likeNum,settop=settop,
                                           createTime=createTime)
     elif type=='child':
         fromId = sth['fromId']
@@ -585,6 +586,22 @@ def deletembcomment():
 
     db.session.commit()
     return jsonify({"msg": "delete comment ok！"})
+
+@app.route('/settopmbcomment', methods=["POST"])
+@cross_origin()
+def settopmbcomment():
+    sth = request.json
+    createTime = sth['createTime']
+    fromId = sth['fromId']
+    # 前端id和后台id对应不上
+    id = sth['id']
+    settop = sth['settop']
+    res1 = messageboardparentcomment.query.filter(messageboardparentcomment.fromId == fromId).all()
+    for x in res1:
+        if x.createTime == createTime:
+            x.settop = settop
+    db.session.commit()
+    return jsonify({"msg": "un/set top comment ok！"})
 # -----------------------------------------------------
 
 # 管理员类路由----------------------------------------

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Descriptions, Button, Modal, Form, Input, Typography, List, Skeleton, message, Space,Row,Col } from 'antd';
+import { Descriptions, Button, Modal, Form, Input, Typography, List, Skeleton, message, Space, Row, Col, Tag } from 'antd';
 import { LaptopOutlined, SmileOutlined, BookOutlined, AppstoreOutlined, LikeOutlined, LikeFilled, DeleteOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import axios from 'axios'
 
@@ -155,6 +155,7 @@ const MessageBoard = ()=>{
             content: text,
             createTime: new Date().getTime(),
             likeNum:0,
+            settop:0,
             child:[]
         }
         
@@ -253,7 +254,19 @@ const MyComment = (props)=>{
     return(
         <>
             {
+                items.map((item) => {
+                    if (item.settop == 1) {
+                        return (
+                            <BaseComemnt item={item} key={item.id} keyid={item.id} comments={comments} setComments={setComments} />
+                        )
+                    }
+                })
+            }
+            {
                 items.map((item)=>{
+                    if(item.settop==1){
+                        return ;
+                    }
                     return(
                         <BaseComemnt item={item} key={item.id} keyid={item.id} comments={comments} setComments={setComments} />
                     )
@@ -269,6 +282,7 @@ const BaseComemnt = (props)=>{
 
     let it = props.item
     // console.log(it)
+    let settop = it.settop
 
     let comments = props.comments
     let setComments = props.setComments
@@ -285,6 +299,8 @@ const BaseComemnt = (props)=>{
 
     const [replystate,setReplyState] = useState(false)
     const [replyclick,setReplyClick] = useState(false)
+
+    const [topstate,setTopState]=useState(settop)
 
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -436,6 +452,55 @@ const BaseComemnt = (props)=>{
         });
     }
 
+    const handlesettop = async ()=>{
+        const settopurl = 'http://127.0.0.1:5000/settopmbcomment'
+        // console.log(topstate)
+        // 此时状态为没有置顶
+        if (topstate == 0){
+            
+            const newstate = { ...state, settop: 1 }
+            // console.log(newstate)
+            const filtercomments = comments.filter((item) => item.id != newstate.id)
+            // console.log(filtercomments)
+            setComments([...filtercomments, newstate])
+
+            // 发送至后端
+            const send = {
+                id: state.id,
+                fromId: state.fromId,
+                // 数据类型需统一为字符串，不然后端无法识别
+                createTime: String(state.createTime),
+                settop:1
+            }
+            // console.log(send)
+            const res1 = await uniPost(settopurl, send)
+            // console.log(res1)
+
+            message.success({ content: '置顶成功！' })
+
+        } else if (topstate==1)
+        {//此时为已置顶，需要取消
+            const newstate = { ...state, settop: 0 }
+            const filtercomments = comments.filter((item) => item.id != newstate.id)
+            setComments([...filtercomments, newstate])
+
+            // 发送至后端
+            const send = {
+                id: state.id,
+                fromId: state.fromId,
+                createTime: String(state.createTime),
+                settop: 0
+            }
+            // console.log(send)
+            const res1 = await uniPost(settopurl, send)
+            
+            message.success({ content: '取消置顶成功！' })
+
+            setTimeout(() => { window.location.reload() }, 2000)
+        }
+        
+    }
+
     return (
         <>
             {contextHolder}
@@ -444,6 +509,9 @@ const BaseComemnt = (props)=>{
                     state.fromId &&
             <>
                 <span className='parentusr'>{state.fromId + ' 说'}</span><span className='parenttime'>{timetrans(Number(state.createTime))}</span>
+                {
+                    isAdmin && <span className='settop' onClick={handlesettop}>{topstate==1?'取消置顶':'置顶'}</span>
+                }
                 <div className='parentcontent'>{state.content}</div>
                 <div>
                     <span className='likeicon' onClick={handlelikeclick}>
@@ -478,6 +546,9 @@ const BaseComemnt = (props)=>{
                         </div>
                     )
                 })
+            }
+            {
+                (state.fromId && topstate)?<div><Tag color="magenta">置顶评论</Tag></div>:<></>
             }
             {
                     state.fromId && <hr className="hr-edge-weak"></hr>

@@ -127,10 +127,10 @@
   cursor: pointer;
 }
 
-.parentreply{
+.parentreply,.settop{
   margin-left: 10px;
 }
-.parentreply:hover{
+.parentreply:hover,.settop:hover{
   cursor: pointer;
   background:rgb(229 230 235);
 }

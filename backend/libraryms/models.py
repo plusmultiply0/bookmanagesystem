@@ -93,6 +93,7 @@ class messageboardparentcomment(db.Model):
     content = db.Column(db.String(300))
     likeNum = db.Column(db.Integer)
     createTime = db.Column(db.String(50))
+    settop = db.Column(db.Integer)
 
 class messageboardchildcomment(db.Model):
     id=db.Column(db.Integer,primary_key=True,nullable=False,autoincrement=True)
