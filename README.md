@@ -82,6 +82,8 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 主页面
 
+可以多类别搜索，查看详情、借阅、收藏等等
+
 ![](screenshot/index.png)
 
 留言板
@@ -124,7 +126,11 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ### 管理员部分
 
-书籍信息审核
+留言板，管理员可以置顶评论或者删除评论
+
+![](screenshot/mb2.png)
+
+书籍信息审核以及新增图书信息模块
 
 ![](screenshot/admin1.png)
 
@@ -132,13 +138,23 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ![](screenshot/admin2.png)
 
-查看编辑删除所有普通用户
+查看所有普通用户基本信息和图书偏好，以及编辑信息和删除账号
 
 ![](screenshot/admin3.png)
+
+读者性别统计分析
+
+![](screenshot/admin32.png)
 
 查看所有用户收藏和借阅信息
 
 ![](screenshot/admin4.png)
+
+收藏及借阅书籍排行统计信息
+
+![](screenshot/admin42.png)
+
+![](screenshot/admin43.png)
 
 ### 其他功能
 
