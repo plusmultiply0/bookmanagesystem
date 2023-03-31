@@ -1,4 +1,4 @@
-import { Button, Space, Modal, Descriptions, notification, message, Table, Input, Form, Select } from "antd"
+import { Button, Space, Modal, Descriptions, notification, message, Table, Input, Form, Select, Card, Row, Col, Switch, Pagination } from "antd"
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 
@@ -40,6 +40,7 @@ const Detail = (props)=>{
     )
 }
 const { TextArea } = Input;
+const { Meta } = Card;
 
 // 通用post函数
 const uniPost = async (url, res) => {
@@ -228,6 +229,11 @@ const BookList = ()=>{
 
     const [selectdata,setSelectData] = useState('name')
 
+    const [conponentshowstatus, setConponentShowStatus] = useState(true)
+
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+
     useEffect(()=>{
         // console.log('effect')
         axios.get(baseUrl).then(response => {
@@ -284,12 +290,71 @@ const BookList = ()=>{
         setSelectData(value)
     }
 
+    const onSwitchChange = (checked)=>{
+        setConponentShowStatus(!checked)
+    }
+
+    const onPageChange = (page) => {
+        // console.log(page);
+        setCurrent(page);
+    };
+
+    const handleShowSizeChange = (current, size) => {
+        const newPage = Math.floor(start / size) + 1;
+        // console.log(newPage,size)
+        setPageSize(size);
+        setCurrent(newPage);
+    };
+
+    // 对数据切片
+    const start = (current - 1) * pageSize;
+    const end = start + pageSize;
+
+    const currentData = bookData.slice(start, end);
+
     return(
         <>
             <Select defaultValue="图书名称" style={{ width: 120, }} options={selectoptions} className='bookselector' 
             value={selectdata} onChange={handleSelectChange}/>
             <Search placeholder="请输入..." onSearch={onSearch} onChange={handleChange} enterButton style={{width: 200,}} />
-            <Table columns={columns} dataSource={bookData} locale={{ emptyText: '暂无数据' }} />
+            <Switch checkedChildren="图片版" unCheckedChildren="文字版"  onChange={onSwitchChange} className="switch"/>
+            <br/>
+            <br/>
+            {
+                conponentshowstatus?
+                <>
+                        <Row gutter={[8, 16]}>
+                            {
+                                currentData.map((item) => {
+                                    return (
+                                        <Col span={6} key={item.id}>
+                                            <Card
+                                                hoverable
+                                                style={{
+                                                    width: 300,
+                                                }}
+                                                cover={<img alt="example" src={"http://127.0.0.1:5000/images/" + item.isbn + ".jpg"} />}
+                                                actions={[
+                                                    <Detail data={item} />,
+                                                    <Borrow data={item} tag={true} />,
+                                                    <Collect data={item} />
+                                                ]}
+                                            >
+                                                <Meta title={item.name} description={item.author} />
+                                            </Card>
+                                        </Col>
+                                    )
+                                })
+                            }
+                        </Row>
+                        <br/>
+                        <Pagination className="pagination" current={current} showSizeChanger onShowSizeChange={handleShowSizeChange} onChange={onPageChange} total={bookData.length} />
+                </>
+                :
+                <Table columns={columns} dataSource={bookData} locale={{ emptyText: '暂无数据' }} />
+            }
+            
+            
         </>
     );
 }

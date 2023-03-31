@@ -154,3 +154,10 @@
     color: #1890FF;
     cursor: pointer;
 }
+
+.switch{
+  margin-left: 20px;
+}
+.pagination{
+  text-align: center;
+}

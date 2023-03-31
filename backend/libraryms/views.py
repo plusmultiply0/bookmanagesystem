@@ -1,6 +1,7 @@
 from libraryms import app
 from flask_cors import cross_origin
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request,send_file
+import os
 
 from flask_jwt_extended import create_access_token
 
@@ -32,6 +33,16 @@ def index():
 @app.errorhandler(404)
 def indexerror(error):
     return render_template('index.html'),404
+
+@app.route('/images/<filename>')
+def get_image(filename):
+    # 获取当前文件所在的目录
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 拼接图片文件路径
+    file_path = os.path.join(current_dir, '..','pics', filename)
+    # 使用 Flask 的 send_file 函数来返回图片
+    return send_file(file_path, mimetype='image/jpeg')
+
 
 
 # 登录、注册------------------------------------------------

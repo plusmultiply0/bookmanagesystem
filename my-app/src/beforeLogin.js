@@ -1,4 +1,4 @@
-import { Form, Button, Layout, Menu, theme, Dropdown, Typography, Space, Table, Modal, Input } from "antd";
+import { Form, Button, Layout, Menu, theme, Dropdown, Typography, Space, Table, Modal, Input, Card, Row, Col, Switch, Pagination } from "antd";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { LaptopOutlined, UserOutlined, BookOutlined, AppstoreOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
@@ -45,10 +45,16 @@ const items = [
     getItem('图书管理', 'sub1', <BookOutlined />, [getItem(<Link to="/bookpreview">图书列表</Link>, 'g1'),]),
 ]
 
+const { Meta } = Card;
+
 const BookPreview = ()=>{
 
     const [bookData, setBookData] = useState([])
     const [savedata, setSaveData] = useState([])
+
+    const [conponentshowstatus, setConponentShowStatus] = useState(true)
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     const {
         token: { colorBgContainer },
@@ -82,6 +88,28 @@ const BookPreview = ()=>{
             setBookData(savedata)
         }
     }
+
+    const onSwitchChange = (checked) => {
+        setConponentShowStatus(!checked)
+    }
+
+    const onPageChange = (page) => {
+        // console.log(page);
+        setCurrent(page);
+    };
+
+    const handleShowSizeChange = (current, size) => {
+        const newPage = Math.floor(start / size) + 1;
+        // console.log(newPage,size)
+        setPageSize(size);
+        setCurrent(newPage);
+    };
+
+    // 对数据切片
+    const start = (current - 1) * pageSize;
+    const end = start + pageSize;
+
+    const currentData = bookData.slice(start, end);
 
     return(
         <>
@@ -124,9 +152,43 @@ const BookPreview = ()=>{
                         >
                             {/* <p>此为预览页面，仅提供基本功能展示。若想体验完整功能，请先注册并登录！</p> */}
                             <Search placeholder="输入书名" onChange={handleChange} enterButton style={{ width: 200, }} />
+                            <Switch checkedChildren="图片版" unCheckedChildren="文字版" onChange={onSwitchChange} className="switch" />
                             <br/>
                             <br />
-                            <Table columns={columns} dataSource={bookData} locale={{ emptyText: '暂无数据' }} />
+                            {/* 图片组件和文字组件 */}
+                            {
+                                conponentshowstatus ?
+                                    <>
+                                        <Row gutter={[8, 16]}>
+                                            {
+                                                currentData.map((item) => {
+                                                    return (
+                                                        <Col span={6} key={item.id}>
+                                                            <Card
+                                                                hoverable
+                                                                style={{
+                                                                    width: 300,
+                                                                }}
+                                                                cover={<img alt="example" src={"http://127.0.0.1:5000/images/" + item.isbn + ".jpg"} />}
+                                                                actions={[
+                                                                    <FakeBorrowCollect name="借阅"/>,
+                                                                    <Detail data={item} />,
+                                                                    <FakeBorrowCollect name="收藏" />
+                                                                ]}
+                                                            >
+                                                                <Meta title={item.name} description={item.author} />
+                                                            </Card>
+                                                        </Col>
+                                                    )
+                                                })
+                                            }
+                                        </Row>
+                                        <br />
+                                        <Pagination className="pagination" current={current} showSizeChanger onShowSizeChange={handleShowSizeChange} onChange={onPageChange} total={bookData.length} />
+                                    </>
+                                    :
+                                    <Table columns={columns} dataSource={bookData} locale={{ emptyText: '暂无数据' }} />
+                            }
                         </Content>
                         <Footer
                             style={{
