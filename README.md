@@ -189,6 +189,10 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ![](screenshot/default2.png)
 
+恢复正常借书功能，除了尽数还书外，还需要缴纳罚款
+
+![](screenshot/default4.png)
+
 超期未缴纳罚金时，限制借书
 
 ![](screenshot/default3.png)
