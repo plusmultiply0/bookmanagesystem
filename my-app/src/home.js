@@ -32,17 +32,25 @@ function getItem(label, key, icon, children, type) {
         type,
     };
 }
-const items = [
-    getItem('图书管理', 'sub1', <BookOutlined />, [getItem(<Link to="/home/bookList">图书列表</Link>, 'g1'), getItem(<Link to="/home/messageBoard">留言板</Link>, 'g2')]),
-    getItem('借阅管理', 'sub2', <LaptopOutlined />, [getItem(<Link to="/home/borrowList">借阅列表</Link>, 'g3'), getItem(<Link to="/home/borrowHistory">借阅历史</Link>, 'g4'), getItem(<Link to="/home/defaultRecord">图书违约</Link>, 'g5')]),
-    getItem('收藏管理', 'sub3', <AppstoreOutlined />, [getItem(<Link to="/home/collectList">收藏列表</Link>,'g6')]),
-    getItem('个人中心', 'sub4', <UserOutlined />, [getItem(<Link to="/home/self">基本信息</Link>, 'g7'), getItem(<Link to="/home/userProfile">个性推荐</Link>, 'g8'), getItem(<Link to="/home/infoCheck">信息审核</Link>, 'g9'), getItem(<Link to="/home/readerManage">读者管理</Link>, 'g10')])
+const allitems = [
+    getItem('图书管理', 'sub1', <BookOutlined />, [getItem(<Link to="/home/bookList">图书列表</Link>, 'g1'), getItem(<Link to="/home/hotRanking">热门排行</Link>, 'g2'), getItem(<Link to="/home/messageBoard">留言板</Link>, 'g3')]),
+    getItem('借阅管理', 'sub2', <LaptopOutlined />, [getItem(<Link to="/home/borrowList">借阅列表</Link>, 'g4'), getItem(<Link to="/home/borrowHistory">借阅历史</Link>, 'g5'), getItem(<Link to="/home/defaultRecord">图书违约</Link>, 'g6')]),
+    getItem('收藏管理', 'sub3', <AppstoreOutlined />, [getItem(<Link to="/home/collectList">收藏列表</Link>,'g7')]),
+    getItem('个人中心', 'sub4', <UserOutlined />, [getItem(<Link to="/home/self">基本信息</Link>, 'g8'), getItem(<Link to="/home/userProfile">个性推荐</Link>, 'g9'), getItem(<Link to="/home/infoCheck">信息审核</Link>, 'g10'), getItem(<Link to="/home/readerManage">读者管理</Link>, 'g11')])
+]
+
+const normalitems = [
+    getItem('图书管理', 'sub1', <BookOutlined />, [getItem(<Link to="/home/bookList">图书列表</Link>, 'g1'), getItem(<Link to="/home/hotRanking">热门排行</Link>, 'g2') ,getItem(<Link to="/home/messageBoard">留言板</Link>, 'g3')]),
+    getItem('借阅管理', 'sub2', <LaptopOutlined />, [getItem(<Link to="/home/borrowList">借阅列表</Link>, 'g4'), getItem(<Link to="/home/borrowHistory">借阅历史</Link>, 'g5'), getItem(<Link to="/home/defaultRecord">图书违约</Link>, 'g6')]),
+    getItem('收藏管理', 'sub3', <AppstoreOutlined />, [getItem(<Link to="/home/collectList">收藏列表</Link>, 'g7')]),
+    getItem('个人中心', 'sub4', <UserOutlined />, [getItem(<Link to="/home/self">基本信息</Link>, 'g8'), getItem(<Link to="/home/userProfile">个性推荐</Link>, 'g9')])
 ]
 
 // 面包屑
 const breadcrumbNameMap = {
     '/home':'主页',
     '/home/bookList': '图书管理 / 图书列表',
+    '/home/hotRanking': '图书管理 / 热门排行',
     '/home/messageBoard': '图书管理 / 留言板',
     '/home/borrowList': '借阅管理 / 借阅列表',
     '/home/borrowHistory': '借阅管理 / 借阅历史',
@@ -55,6 +63,9 @@ const breadcrumbNameMap = {
 };
 
 const MainPage = () => {
+    const admin = window.localStorage.getItem('admin')
+    const [isAdmin, setAdmin] = useState(admin)
+
     // 面包屑
     const location = useLocation();
     const pathSnippets = location.pathname.split('/').filter((i) => i);
@@ -104,7 +115,7 @@ const MainPage = () => {
                             height: '100%',
                             borderRight: 0,
                         }}
-                        items={items}
+                        items={isAdmin ? allitems : normalitems}
                     />
                 </Sider>
                 <Layout

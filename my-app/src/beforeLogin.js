@@ -1,5 +1,5 @@
 import { Form, Button, Layout, Menu, theme, Dropdown, Typography, Space, Table, Modal, Input, Card, Row, Col, Switch, Pagination } from "antd";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, Outlet } from "react-router-dom";
 import { LaptopOutlined, UserOutlined, BookOutlined, AppstoreOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
@@ -20,7 +20,7 @@ const BeforeLogin = () => {
                 </Link>
             </Form.Item>
             <Form.Item>
-                <Link to="/bookpreview">
+                <Link to="/preview/books">
                     <Button type="primary" id="homepreview" size="large">随便逛逛</Button>
                 </Link>
             </Form.Item>
@@ -42,10 +42,71 @@ function getItem(label, key, icon, children, type) {
     };
 }
 const items = [
-    getItem('图书管理', 'sub1', <BookOutlined />, [getItem(<Link to="/bookpreview">图书列表</Link>, 'g1'),]),
+    getItem('图书管理', 'sub1', <BookOutlined />, [getItem(<Link to="/preview/books">图书列表</Link>, 'g1'), getItem(<Link to="/preview/hotRanking">热门排行</Link>, 'g2')]),
 ]
 
 const { Meta } = Card;
+
+const FrameForAll = ()=>{
+
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken();
+
+    return (
+        <>
+            <Layout className="mainpage">
+                <Header className="header">
+                    <Title level={3} type="success" className="wetitle">图书管理系统</Title>
+                    <LoginRegisterButton />
+                </Header>
+                <Layout>
+                    <Sider
+                        width={200}
+                        style={{
+                            background: colorBgContainer,
+                        }}
+                    >
+                        <Menu
+                            mode="inline"
+                            defaultSelectedKeys={['1']}
+                            defaultOpenKeys={['sub1']}
+                            style={{
+                                height: '100%',
+                                borderRight: 0,
+                            }}
+                            items={items}
+                        />
+                    </Sider>
+                    <Layout
+                        style={{
+                            padding: '0 24px 24px',
+                        }}
+                    >
+                        <Content
+                            style={{
+                                padding: 24,
+                                margin: 0,
+                                minHeight: 280,
+                                background: colorBgContainer,
+                                overflow: 'auto',
+                            }}
+                        >
+                            <Outlet />
+                        </Content>
+                        <Footer
+                            style={{
+                                textAlign: 'center',
+                            }}
+                        >
+                            Book management system ©2023 Created by ZJC
+                        </Footer>
+                    </Layout>
+                </Layout>
+            </Layout>
+        </>
+    )
+}
 
 const BookPreview = ()=>{
 
@@ -113,93 +174,45 @@ const BookPreview = ()=>{
 
     return(
         <>
-            <Layout className="mainpage">
-                <Header className="header">
-                    <Title level={3} type="success" className="wetitle">图书管理系统</Title>
-                    <LoginRegisterButton/>
-                </Header>
-                <Layout>
-                    <Sider
-                        width={200}
-                        style={{
-                            background: colorBgContainer,
-                        }}
-                    >
-                        <Menu
-                            mode="inline"
-                            defaultSelectedKeys={['1']}
-                            defaultOpenKeys={['sub1']}
-                            style={{
-                                height: '100%',
-                                borderRight: 0,
-                            }}
-                            items={items}
-                        />
-                    </Sider>
-                    <Layout
-                        style={{
-                            padding: '0 24px 24px',
-                        }}
-                    >
-                        <Content
-                            style={{
-                                padding: 24,
-                                margin: 0,
-                                minHeight: 280,
-                                background: colorBgContainer,
-                                overflow: 'auto',
-                            }}
-                        >
-                            {/* <p>此为预览页面，仅提供基本功能展示。若想体验完整功能，请先注册并登录！</p> */}
-                            <Search placeholder="输入书名" onChange={handleChange} enterButton style={{ width: 200, }} />
-                            <Switch checkedChildren="图片版" unCheckedChildren="文字版" onChange={onSwitchChange} className="switch" />
-                            <br/>
-                            <br />
-                            {/* 图片组件和文字组件 */}
-                            {
-                                conponentshowstatus ?
-                                    <>
-                                        <Row gutter={[8, 16]}>
-                                            {
-                                                currentData.map((item) => {
-                                                    return (
-                                                        <Col span={6} key={item.id}>
-                                                            <Card
-                                                                hoverable
-                                                                style={{
-                                                                    width: 300,
-                                                                }}
-                                                                cover={<img alt="example" src={"http://127.0.0.1:5000/images/" + item.isbn + ".jpg"} />}
-                                                                actions={[
-                                                                    <FakeBorrowCollect name="借阅"/>,
-                                                                    <Detail data={item} />,
-                                                                    <FakeBorrowCollect name="收藏" />
-                                                                ]}
-                                                            >
-                                                                <Meta title={item.name} description={item.author} />
-                                                            </Card>
-                                                        </Col>
-                                                    )
-                                                })
-                                            }
-                                        </Row>
-                                        <br />
-                                        <Pagination className="pagination" current={current} showSizeChanger onShowSizeChange={handleShowSizeChange} onChange={onPageChange} total={bookData.length} />
-                                    </>
-                                    :
-                                    <Table columns={columns} dataSource={bookData} locale={{ emptyText: '暂无数据' }} />
-                            }
-                        </Content>
-                        <Footer
-                            style={{
-                                textAlign: 'center',
-                            }}
-                        >
-                            Book management system ©2023 Created by ZJC
-                        </Footer>
-                    </Layout>
-                </Layout>
-            </Layout>
+            {/* <p>此为预览页面，仅提供基本功能展示。若想体验完整功能，请先注册并登录！</p> */}
+            <Search placeholder="输入书名" onChange={handleChange} enterButton style={{ width: 200, }} />
+            <Switch checkedChildren="图片版" unCheckedChildren="文字版" onChange={onSwitchChange} className="switch" />
+            <br/>
+            <br />
+            {/* 图片组件和文字组件 */}
+            {
+                conponentshowstatus ?
+                <>
+                    <Row gutter={[8, 16]}>
+                    {
+                        currentData.map((item) => {
+                            return (
+                                <Col span={6} key={item.id}>
+                                    <Card
+                                        hoverable
+                                        style={{
+                                            width: 300,
+                                        }}
+                                        cover={<img alt="example" src={"http://127.0.0.1:5000/images/" + item.isbn + ".jpg"} />}
+                                        actions={[
+                                            <FakeBorrowCollect name="借阅"/>,
+                                            <Detail data={item} />,
+                                            <FakeBorrowCollect name="收藏" />
+                                        ]}
+                                        >
+                                        <Meta title={item.name} description={item.author} />
+                                    </Card>
+                                </Col>
+                                )
+                            })
+                        }
+                        </Row>
+                        <br />
+                        <Pagination className="pagination" current={current} showSizeChanger onShowSizeChange={handleShowSizeChange} onChange={onPageChange} total={bookData.length} />
+                </>
+                    :
+                    <Table columns={columns} dataSource={bookData} locale={{ emptyText: '暂无数据' }} />
+            }
         </>
     )
 }
@@ -217,6 +230,13 @@ const LoginRegisterButton = () => {
         {
             label: <Link to="/register">注册</Link>,
             key: '1',
+        },
+        {
+            type: 'divider',
+        },
+        {
+            label: <Link to="/">首页</Link>,
+            key: '2',
         },
     ];
     return (
@@ -312,4 +332,6 @@ const FakeBorrowCollect = (props) => {
     )
 }
 
-export { BeforeLogin, BookPreview } 
+
+
+export { BeforeLogin, BookPreview, FrameForAll, FakeBorrowCollect } 

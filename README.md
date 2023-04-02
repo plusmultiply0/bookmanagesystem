@@ -10,6 +10,7 @@
 - 用户实现个人信息及密码的更改
 - 实现个人想法的发布和删除
 - 对图书图文信息的搜索（支持多类别搜索）和查看
+- 查看热门借阅、收藏以及新录入的图书
 - 在留言板留言或查看过往留言，留言支持回复和输入表情以及点赞
 - 对图书进行借阅和归还
 - 对图书进行收藏和信息导出
@@ -72,6 +73,10 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ![](screenshot/2.png)
 
+可以查看热门排行图书
+
+![](screenshot/22.png)
+
 进行相关操作时，提示登录才能完成
 
 ![](screenshot/3.png)
@@ -91,6 +96,10 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 ![](screenshot/index2.png)
 
 ![](screenshot/index.png)
+
+热门排行，可以查看热门借阅、收藏图书以及新录入的图书
+
+![](screenshot/index3.png)
 
 留言板
 

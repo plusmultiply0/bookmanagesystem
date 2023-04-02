@@ -613,6 +613,87 @@ def settopmbcomment():
             x.settop = settop
     db.session.commit()
     return jsonify({"msg": "un/set top comment ok！"})
+
+# 热门排行
+@app.route('/hotborrowdata', methods=["GET"])
+@cross_origin()
+def hotborrowdata():
+    res1 = bookBorrowHistory.query.all()
+    booknamearray = []
+    response = []
+    for x in res1:
+        booknamearray.append(x.name)
+    # 取值唯一的数组
+    uniquetagarray = list(set(booknamearray))
+    dict1 = {}
+    for x in booknamearray:
+        dict1[x] = dict1.get(x, 0) + 1
+    for x in uniquetagarray:
+        subdict = dict([(key, dict1[key]) for key in [x]])
+        # print(list(subdict.keys()))
+        fridict = dict(type=list(subdict.keys())[0], value=list(subdict.values())[0])
+        response.append(fridict)
+    response.sort(key=getnum,reverse=True)
+    if len(response)>10:
+        response = response[:10]
+    # 上述生成type和value的字典数据
+    # 生成包含图书详细信息的数组
+    newresponse = []
+    for x in response:
+        res1 = bookitem.query.filter(bookitem.name == x['type']).first()
+        newitem = {"key":res1.bid,"name":res1.name, "value":x['value'],"author":res1.author, "publish":res1.publish, "isbn":res1.isbn, "price":res1.price, "number":res1.number, "type":res1.type,"intro":res1.intro, "pubdate":res1.pubdate}
+        newresponse.append(newitem)
+    # print(newresponse)
+    return newresponse
+
+@app.route('/hotcollectdata', methods=["GET"])
+@cross_origin()
+def hotcollectdata():
+    res1 = bookCollect.query.all()
+    booknamearray = []
+    response = []
+    for x in res1:
+        res2 = bookitem.query.filter(bookitem.isbn == x.isbn).first()
+        booknamearray.append(res2.name)
+    # 取值唯一的数组
+    uniquetagarray = list(set(booknamearray))
+    dict1 = {}
+    for x in booknamearray:
+        dict1[x] = dict1.get(x, 0) + 1
+    for x in uniquetagarray:
+        subdict = dict([(key, dict1[key]) for key in [x]])
+        # print(list(subdict.keys()))
+        fridict = dict(type=list(subdict.keys())[0], value=list(subdict.values())[0])
+        response.append(fridict)
+    response.sort(key=getnum,reverse=True)
+    if len(response)>10:
+        response = response[:10]
+    # 上述生成type和value的字典数据
+    # 生成包含图书详细信息的数组
+    newresponse = []
+    for x in response:
+        res1 = bookitem.query.filter(bookitem.name == x['type']).first()
+        newitem = {"key": res1.bid, "name": res1.name, "value": x['value'], "author": res1.author,
+                       "publish": res1.publish, "isbn": res1.isbn, "price": res1.price, "number": res1.number,
+                       "type": res1.type, "intro": res1.intro, "pubdate": res1.pubdate}
+        newresponse.append(newitem)
+    # print(newresponse)
+    return newresponse
+
+# 新书速递
+@app.route('/newbookrecommenddata', methods=["GET"])
+@cross_origin()
+def newbookrecommenddata():
+    res1 = bookitem.query.order_by(bookitem.bid.desc()).limit(3).all()
+    response = []
+    for x in res1:
+        newitem = {"key": x.bid, "name": x.name,"author": x.author,
+                   "publish": x.publish, "isbn": x.isbn, "price": x.price, "number": x.number,
+                   "type": x.type, "intro": x.intro, "pubdate": x.pubdate}
+        response.append(newitem)
+    # print(response)
+    return response
+
 # -----------------------------------------------------
 
 # 管理员类路由----------------------------------------
@@ -724,7 +805,7 @@ def usrcollectanalysisdata():
     response.sort(key=getnum,reverse=True)
     if len(response)>10:
         response = response[:10]
-    # print(response)
+    print(response)
     return response
 
 # 排序函数
