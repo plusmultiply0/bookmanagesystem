@@ -22,9 +22,8 @@
 管理员包含普通用户的功能，还有如下功能：
 
 - 置顶或者取消置顶、删除留言板的评论
-
+- 审核用户归还的图书信息
 - 新增图书信息
-
 - 实现新增书籍信息的审核
 - 编辑修改、删除旧有的图书信息
 - 查看普通用户基本信息、图书偏好及相关统计分析图，编辑基本信息，以及实现用户账户的删除
@@ -97,6 +96,10 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ![](screenshot/index.png)
 
+当剩余数量为0时，提示借阅失败
+
+![](screenshot/index4.png)
+
 热门排行，可以查看热门借阅、收藏图书以及新录入的图书
 
 ![](screenshot/index3.png)
@@ -109,7 +112,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ![](screenshot/collect.png)
 
-借阅页面
+借阅页面，归还图书需要申请，等待管理员批准
 
 ![](screenshot/borrow.png)
 
@@ -144,6 +147,10 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 留言板，管理员可以置顶评论或者删除评论
 
 ![](screenshot/mb2.png)
+
+审核用户的归还图书
+
+![](screenshot/admin11.png)
 
 书籍信息审核以及新增图书信息模块
 

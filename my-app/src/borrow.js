@@ -46,6 +46,39 @@ const borrowColumns = [
     },
 ]
 
+const applyBorrowColumns = [
+    {
+        title: '序号',
+        dataIndex: 'id',
+        key: 'id',
+    },
+    {
+        title: '图书名称',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: '借阅人',
+        dataIndex: 'borrowusr',
+        key: 'borrowusr',
+    },
+    {
+        title: '归还数量',
+        dataIndex: 'returnnum',
+        key: 'returnnum',
+    },
+    {
+        title: '借阅日期',
+        dataIndex: 'borrowdate',
+        key: 'borrowdate',
+    },
+    // {
+    //     title: '归还日期',
+    //     dataIndex: 'shouldreturndate',
+    //     key: 'shouldreturndate',
+    // },
+]
+
 const uniPost = async (url, res) => {
     const response = await axios.post(url, res)
     // console.log('response.data:',response.data)
@@ -88,7 +121,13 @@ const Return = (props) => {
     const openNotificationWithIcon = (type) => {
         api[type]({
             message: '通知信息：',
-            description: isReturn ? '归还成功！' : '归还失败！',
+            description: isReturn ? '申请成功！请等待管理员审核！' : '归还失败！借阅数量为0！',
+        });
+    };
+    const openNotificationWithIconError = (type) => {
+        api[type]({
+            message: '通知信息：',
+            description: '归还失败！借阅数量为0！',
         });
     };
 
@@ -101,18 +140,27 @@ const Return = (props) => {
             returndate: getCurrentTime(false),
             timestamp: new Date().getTime()
         }
+        // 借阅数量为0时，提示失败
+        if (data.borrownum<1){
+            openNotificationWithIconError('error')
+            return;
+        }
+
         // console.log(newValue)
-        const res1 = await uniPost('http://127.0.0.1:5000/toreturn', newValue)
+        const res1 = await uniPost('http://127.0.0.1:5000/beforetoreturn', newValue)
         // console.log('res1', res1)
         openNotificationWithIcon(isReturn ? 'success' : 'error')
 
         setTimeout(() => { window.location.reload() }, 3000)
     }
+
+    const buttontext = data.ischecking == -1 ? '再次归还' :'归还'
+
     return (
         <>
             {contextHolder}
             <Space>
-                <Button onClick={handleClick}>归还</Button>
+                <Button onClick={handleClick}>{buttontext}</Button>
             </Space>
         </>
     )
@@ -120,6 +168,8 @@ const Return = (props) => {
 
 const BorrowList = ()=>{
     const [borrowdata ,setBorrowData] = useState([])
+    const [applyborrowdata, setApplyBorrowData] = useState([])
+
 
     const baseUrl = 'http://127.0.0.1:5000/borrowdata'
     const self = window.localStorage.getItem('loggedUser')
@@ -135,15 +185,21 @@ const BorrowList = ()=>{
             params: res
         }).then(response => {
             const data = response.data
-            // console.log(data)
+            console.log(data)
             setBorrowData(data)
+            const filterdata = data.filter((item) => item.ischecking==1)
+            console.log(filterdata)
+            setApplyBorrowData(filterdata)
         })
     }, [])
     //只在第一次渲染时运行
 
     return(
         <>
+            <Title>借阅图书</Title>
             <Table columns={borrowColumns} dataSource={borrowdata} locale={{emptyText:'暂无数据'}}/>
+            <Title>归还图书申请</Title>
+            <Table columns={applyBorrowColumns} dataSource={applyborrowdata} locale={{ emptyText: '暂无数据' }} />
         </>
     );
 }

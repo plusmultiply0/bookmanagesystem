@@ -385,7 +385,7 @@ def toborrow():
         return jsonify({"msg": "add book num ok！"})
     # 第一次借书
     else:
-        newborrow = bookBorrow(borrowusr=borrowusr,name=name,borrownum=borrownum,borrowdate=borrowdate,shouldreturndate=shouldreturndate)
+        newborrow = bookBorrow(borrowusr=borrowusr,name=name,borrownum=borrownum,borrowdate=borrowdate,shouldreturndate=shouldreturndate,ischecking=0,returnnum=0)
         newhistory = bookBorrowHistory(name=name,borrowusr=borrowusr,borrowdate=borrowdate,returndate='')
         db.session.add(newborrow)
         db.session.add(newhistory)
@@ -425,7 +425,7 @@ def borrowdata():
         # print(2)
         response = []
         for x in res1:
-            item = {"id":x.id,"key":x.id,"name":x.name,"borrowusr":x.borrowusr,"borrowdate":x.borrowdate,"borrownum":x.borrownum,"shouldreturndate":x.shouldreturndate}
+            item = {"id":x.id,"key":x.id,"name":x.name,"borrowusr":x.borrowusr,"borrowdate":x.borrowdate,"borrownum":x.borrownum,"shouldreturndate":x.shouldreturndate,"ischecking":x.ischecking,"returnnum":x.returnnum}
             response.append(item)
         return response
 
@@ -438,11 +438,14 @@ def toreturn():
     name = sth['name']
     returndate = sth['returndate']
     timestamp = sth['timestamp']
+    returnnum = sth['returnnum']
     res1 = bookBorrow.query.filter(bookBorrow.borrowusr == borrowusr).all()
     for x in res1:
         if x.name == name:
-            if x.borrownum > 1:
-                x.borrownum = x.borrownum-1
+            if x.borrownum >= 1:
+                x.returnnum = 0
+                x.ischecking = 0
+                # x.borrownum = x.borrownum-1
             else:
                 db.session.delete(x)
                 # 当书尽数归还，记录已还书和最后的时间戳
@@ -459,11 +462,46 @@ def toreturn():
         if x.name == name:
             x.returndate = returndate
     db.session.commit()
-    # 库存图书数量+1
+    # 库存图书数量+returnnum
     res3 = bookitem.query.filter(bookitem.name == name).first()
-    res3.number = res3.number+1
+    res3.number = res3.number+returnnum
     db.session.commit()
     return jsonify({"msg": "return ok！"})
+
+# 归还前需要先审批
+@app.route('/beforetoreturn', methods=["POST"])
+@cross_origin()
+def beforetoreturn():
+    sth = request.json
+    borrowusr = sth['borrowusr']
+    name = sth['name']
+    res1 = bookBorrow.query.filter(bookBorrow.borrowusr == borrowusr).all()
+    for x in res1:
+        if x.name == name:
+            x.returnnum = x.returnnum+1
+            x.ischecking = 1
+            x.borrownum = x.borrownum - 1
+
+    db.session.commit()
+
+    return jsonify({"msg": "apply return ok！"})
+
+@app.route('/denyreturn', methods=["POST"])
+@cross_origin()
+def denyreturn():
+    sth = request.json
+    borrowusr = sth['borrowusr']
+    name = sth['name']
+    res1 = bookBorrow.query.filter(bookBorrow.borrowusr == borrowusr).all()
+    for x in res1:
+        if x.name == name:
+            x.borrownum = x.borrownum + x.returnnum
+            x.ischecking = -1
+            x.returnnum = 0
+
+    db.session.commit()
+
+    return jsonify({"msg": "apply return ok！"})
 
 @app.route('/toaddnewbook', methods=["POST"])
 @cross_origin()
@@ -811,6 +849,18 @@ def usrcollectanalysisdata():
 # 排序函数
 def getnum(e):
     return e['value']
+
+# 用户借阅数据
+@app.route('/usrborrowlistdata', methods=["GET"])
+@cross_origin()
+def usrborrowlistdata():
+    res1 = bookBorrow.query.all()
+    response = []
+    for x in res1:
+        item = {"id":x.id,"key":x.id,"name":x.name,"borrowusr":x.borrowusr,"borrowdate":x.borrowdate,"borrownum":x.borrownum,"shouldreturndate":x.shouldreturndate,"ischecking":x.ischecking,"returnnum":x.returnnum}
+        response.append(item)
+    # print(response)
+    return response
 
 @app.route('/usrborrowdata', methods=["GET"])
 @cross_origin()

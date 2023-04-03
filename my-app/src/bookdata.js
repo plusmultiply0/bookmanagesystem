@@ -229,7 +229,7 @@ const BookList = ()=>{
 
     const [selectdata,setSelectData] = useState('name')
 
-    const [conponentshowstatus, setConponentShowStatus] = useState(true)
+    const [conponentshowstatus, setConponentShowStatus] = useState(false)
 
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -317,7 +317,7 @@ const BookList = ()=>{
             <Select defaultValue="图书名称" style={{ width: 120, }} options={selectoptions} className='bookselector' 
             value={selectdata} onChange={handleSelectChange}/>
             <Search placeholder="请输入..." onSearch={onSearch} onChange={handleChange} enterButton style={{width: 200,}} />
-            <Switch checkedChildren="图片版" unCheckedChildren="文字版"  onChange={onSwitchChange} className="switch"/>
+            <Switch defaultChecked checkedChildren="图片版" unCheckedChildren="文字版"  onChange={onSwitchChange} className="switch"/>
             <br/>
             <br/>
             {
@@ -336,7 +336,7 @@ const BookList = ()=>{
                                                 cover={<img alt="example" src={"http://127.0.0.1:5000/images/" + item.isbn + ".jpg"} />}
                                                 actions={[
                                                     <Detail data={item} />,
-                                                    <Borrow data={item} tag={true} />,
+                                                    <Borrow data={item} tag={false} />,
                                                     <Collect data={item} />
                                                 ]}
                                             >

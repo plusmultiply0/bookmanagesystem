@@ -97,6 +97,79 @@ const newbookcolumns = [
         )
     },
 ]
+const applyBorrowColumns = [
+    {
+        title: '序号',
+        dataIndex: 'id',
+        key: 'id',
+    },
+    {
+        title: '图书名称',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: '借阅人',
+        dataIndex: 'borrowusr',
+        key: 'borrowusr',
+    },
+    {
+        title: '归还数量',
+        dataIndex: 'returnnum',
+        key: 'returnnum',
+    },
+    {
+        title: '借阅日期',
+        dataIndex: 'borrowdate',
+        key: 'borrowdate',
+    },
+    // {
+    //     title: '归还日期',
+    //     dataIndex: 'shouldreturndate',
+    //     key: 'shouldreturndate',
+    // },
+    {
+        title: '操作',
+        key: 'action',
+        render: (_, record) => (
+            <Space size="middle">
+                <OkReturn data={record} />
+                <DenyReturn data={record} />
+            </Space>
+        )
+    },
+]
+
+// 获取设置时间的函数
+function zeroFill(i) {
+    if (i >= 0 && i <= 9) {
+        return "0" + i;
+    } else {
+        return i;
+    }
+}
+function getCurrentTime(more) {
+
+    if (!more) {
+        var date = new Date();//当前时间
+        var month = zeroFill(date.getMonth() + 1);//月
+        var day = zeroFill(date.getDate());//日
+        //当前时间
+        var curTime = date.getFullYear() + "-" + month + "-" + day
+    } else {
+        var date = new Date();//当前时间
+        var month = zeroFill(date.getMonth() + 2);//月
+        let year = date.getFullYear()
+        let day = zeroFill(date.getDate());//日
+        if (month > 12) {
+            year = date.getFullYear() + 1
+            month = zeroFill(1)
+        }
+        var curTime = year + "-" + month + "-" + day
+    }
+    return curTime;
+}
+
 // 信息审核组件
 const InfoCheck = () => {
     const admin = window.localStorage.getItem('admin')
@@ -104,6 +177,7 @@ const InfoCheck = () => {
 
     const [bookdata,setBookData] = useState([])
     const [newbookdata,setNewBookData] = useState([])
+    const [applyborrowdata, setApplyBorrowData] = useState([])
 
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
@@ -122,6 +196,12 @@ const InfoCheck = () => {
             const data = response.data
             // console.log('new book data:', data)
             setNewBookData(data)
+        })
+        axios.get('http://127.0.0.1:5000/usrborrowlistdata').then(response => {
+            const data = response.data
+            const filterdata = data.filter((item) => item.ischecking == 1)
+            // console.log('new book data:', data)
+            setApplyBorrowData(filterdata)
         })
 
     }, [])
@@ -160,6 +240,9 @@ const InfoCheck = () => {
         isAdmin ?
          <>
                 {contextHolder}
+            <Title>书籍归还信息审核</Title>
+                <Table columns={applyBorrowColumns} dataSource={applyborrowdata} locale={{ emptyText: '暂无数据' }} />
+
             <Title>新增图书信息</Title>
             <p>点击下方按钮，即可录入图书信息！</p>
             <br/>
@@ -224,8 +307,90 @@ const InfoCheck = () => {
     );
 }
 
+const OkReturn = (props) => {
+    const data = props.data
+
+    const [api, contextHolder] = notification.useNotification();
+
+    const openNotificationWithIcon = (type) => {
+        api[type]({
+            message: '通知信息：',
+            description: '审核成功！已通过该申请！',
+        });
+    };
+
+    const handleCilck = async () => {
+        const self = window.localStorage.getItem('loggedUser')
+        const newValue = {
+            borrowusr: self,
+            name: data.name,
+            returnnum: data.returnnum,
+            borrownum: 1,
+            returndate: getCurrentTime(false),
+            timestamp: new Date().getTime()
+        }
+        // console.log('new value', values)
+
+        const res1 = await uniPost('http://127.0.0.1:5000/toreturn', newValue)
+        // console.log('res1', res1)
+
+        openNotificationWithIcon('success')
+
+        setTimeout(() => { window.location.reload() }, 2000)
+    }
+
+    return (
+        <>
+            {contextHolder}
+            <Space>
+                <Button onClick={handleCilck} type="primary" ghost>通过</Button>
+            </Space>
+        </>
+    )
+}
+
+const DenyReturn = (props) => {
+    const data = props.data
+
+    const [api, contextHolder] = notification.useNotification();
+
+    const openNotificationWithIcon = (type) => {
+        api[type]({
+            message: '通知信息：',
+            description: '审核成功！已拒绝该申请！',
+        });
+    };
+
+    const handleCilck = async () => {
+
+        const self = window.localStorage.getItem('loggedUser')
+        const newValue = {
+            borrowusr: self,
+            name: data.name,
+            returnnum: data.returnnum,
+        }
+        // console.log('new value', values)
+
+        const res1 = await uniPost('http://127.0.0.1:5000/denyreturn', newValue)
+        // console.log('res1', res1)
+
+        openNotificationWithIcon('error')
+
+        setTimeout(() => { window.location.reload() }, 2000)
+    }
+
+    return (
+        <>
+            {contextHolder}
+            <Space>
+                <Button onClick={handleCilck}>拒绝</Button>
+            </Space>
+        </>
+    )
+}
 
 
+// 审核图书
 const DelBook = (props) => {
     const data = props.data
 

@@ -52,6 +52,8 @@ class bookBorrow(db.Model):
     borrownum = db.Column(db.Integer)
     borrowdate=db.Column(db.String(30))
     shouldreturndate=db.Column(db.String(30))
+    ischecking = db.Column(db.Integer)
+    returnnum = db.Column(db.Integer)
 
 class bookBorrowHistory(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
