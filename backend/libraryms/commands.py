@@ -94,35 +94,35 @@ def build():
     db.session.add(m)
 
     # 用户借阅数据
-    m1 = bookBorrow(name='白夜行',borrowusr='zjc',borrownum=1,borrowdate='2022-12-28',shouldreturndate='2023-01-28')
+    m1 = bookBorrow(name='白夜行',borrowusr='zjc',borrownum=1,borrowdate='2022-12-28',shouldreturndate='2023-01-28',ischecking=0,returnnum=0)
     m2 = bookBorrowHistory(name='白夜行',borrowusr='zjc',borrowdate='2022-12-28',returndate='')
     m3 = bookDefaultRecord(name='白夜行',borrowusr='zjc',borrowdate='2022-12-28',shouldreturndate='2023-01-28',
                            number=1,borrowtimestamp='1672156800000',ispayfine=0,isreturnbook=0)
     db.session.add(m1)
     db.session.add(m2)
     db.session.add(m3)
-    m1 = bookBorrow(name='命运', borrowusr='zjc', borrownum=2, borrowdate='2022-11-28', shouldreturndate='2022-12-28')
+    m1 = bookBorrow(name='命运', borrowusr='zjc', borrownum=2, borrowdate='2022-11-28', shouldreturndate='2022-12-28',ischecking=0,returnnum=0)
     m2 = bookBorrowHistory(name='命运', borrowusr='zjc', borrowdate='2022-11-28', returndate='')
     m3 = bookDefaultRecord(name='命运', borrowusr='zjc', borrowdate='2022-11-28', shouldreturndate='2022-12-28',
                            number=2, borrowtimestamp='1669564800000', ispayfine=0, isreturnbook=0)
     db.session.add(m1)
     db.session.add(m2)
     db.session.add(m3)
-    m1 = bookBorrow(name='球状闪电', borrowusr='test', borrownum=1, borrowdate='2022-12-27', shouldreturndate='2023-01-27')
+    m1 = bookBorrow(name='球状闪电', borrowusr='test', borrownum=1, borrowdate='2022-12-27', shouldreturndate='2023-01-27',ischecking=0,returnnum=0)
     m2 = bookBorrowHistory(name='球状闪电', borrowusr='test', borrowdate='2022-12-27', returndate='')
     m3 = bookDefaultRecord(name='球状闪电', borrowusr='test', borrowdate='2022-12-27', shouldreturndate='2023-01-27',
                            number=1, borrowtimestamp='1672070400000', ispayfine=0, isreturnbook=0)
     db.session.add(m1)
     db.session.add(m2)
     db.session.add(m3)
-    m1 = bookBorrow(name='无人生还', borrowusr='赵怀真', borrownum=1, borrowdate='2022-12-26', shouldreturndate='2023-01-26')
+    m1 = bookBorrow(name='无人生还', borrowusr='赵怀真', borrownum=1, borrowdate='2022-12-26', shouldreturndate='2023-01-26',ischecking=0,returnnum=0)
     m2 = bookBorrowHistory(name='无人生还', borrowusr='赵怀真', borrowdate='2022-12-26', returndate='')
     m3 = bookDefaultRecord(name='无人生还', borrowusr='赵怀真', borrowdate='2022-12-26', shouldreturndate='2023-01-26',
                            number=1, borrowtimestamp='1671984000000', ispayfine=0, isreturnbook=0)
     db.session.add(m1)
     db.session.add(m2)
     db.session.add(m3)
-    m1 = bookBorrow(name='海葵', borrowusr='沈梦溪', borrownum=1, borrowdate='2022-12-27', shouldreturndate='2023-01-27')
+    m1 = bookBorrow(name='海葵', borrowusr='沈梦溪', borrownum=1, borrowdate='2022-12-27', shouldreturndate='2023-01-27',ischecking=0,returnnum=0)
     m2 = bookBorrowHistory(name='海葵', borrowusr='沈梦溪', borrowdate='2022-12-27', returndate='')
     m3 = bookDefaultRecord(name='海葵', borrowusr='沈梦溪', borrowdate='2022-12-27', shouldreturndate='2023-01-27',
                            number=1, borrowtimestamp='1672070400000', ispayfine=0, isreturnbook=0)
@@ -130,21 +130,21 @@ def build():
     db.session.add(m2)
     db.session.add(m3)
     # 天龙八部
-    m1 = bookBorrow(name='天龙八部', borrowusr='沈梦溪', borrownum=1, borrowdate='2023-01-16', shouldreturndate='2023-02-16')
+    m1 = bookBorrow(name='天龙八部', borrowusr='沈梦溪', borrownum=1, borrowdate='2023-01-16', shouldreturndate='2023-02-16',ischecking=0,returnnum=0)
     m2 = bookBorrowHistory(name='天龙八部', borrowusr='沈梦溪', borrowdate='2023-01-16', returndate='')
     m3 = bookDefaultRecord(name='天龙八部', borrowusr='沈梦溪', borrowdate='2023-01-16', shouldreturndate='2023-02-16',
                            number=1, borrowtimestamp='1673827200000', ispayfine=0, isreturnbook=0)
     db.session.add(m1)
     db.session.add(m2)
     db.session.add(m3)
-    m1 = bookBorrow(name='天龙八部', borrowusr='赵怀真', borrownum=1, borrowdate='2023-01-12', shouldreturndate='2023-02-12')
+    m1 = bookBorrow(name='天龙八部', borrowusr='赵怀真', borrownum=1, borrowdate='2023-01-12', shouldreturndate='2023-02-12',ischecking=0,returnnum=0)
     m2 = bookBorrowHistory(name='天龙八部', borrowusr='赵怀真', borrowdate='2023-01-12', returndate='')
     m3 = bookDefaultRecord(name='天龙八部', borrowusr='赵怀真', borrowdate='2023-01-12', shouldreturndate='2023-02-12',
                            number=1, borrowtimestamp='1673481600000', ispayfine=0, isreturnbook=0)
     db.session.add(m1)
     db.session.add(m2)
     db.session.add(m3)
-    m1 = bookBorrow(name='天龙八部', borrowusr='test', borrownum=1, borrowdate='2023-01-12', shouldreturndate='2023-02-12')
+    m1 = bookBorrow(name='天龙八部', borrowusr='test', borrownum=1, borrowdate='2023-01-12', shouldreturndate='2023-02-12',ischecking=0,returnnum=0)
     m2 = bookBorrowHistory(name='天龙八部', borrowusr='test', borrowdate='2023-01-12', returndate='')
     m3 = bookDefaultRecord(name='天龙八部', borrowusr='test', borrowdate='2023-01-12', shouldreturndate='2023-02-12',
                            number=1, borrowtimestamp='1673481600000', ispayfine=0, isreturnbook=0)
@@ -152,14 +152,14 @@ def build():
     db.session.add(m2)
     db.session.add(m3)
     # 球状闪电
-    m1 = bookBorrow(name='球状闪电', borrowusr='沈梦溪', borrownum=1, borrowdate='2023-01-16', shouldreturndate='2023-02-16')
+    m1 = bookBorrow(name='球状闪电', borrowusr='沈梦溪', borrownum=1, borrowdate='2023-01-16', shouldreturndate='2023-02-16',ischecking=0,returnnum=0)
     m2 = bookBorrowHistory(name='球状闪电', borrowusr='沈梦溪', borrowdate='2023-01-16', returndate='')
     m3 = bookDefaultRecord(name='球状闪电', borrowusr='沈梦溪', borrowdate='2023-01-16', shouldreturndate='2023-02-16',
                            number=1, borrowtimestamp='1673827200000', ispayfine=0, isreturnbook=0)
     db.session.add(m1)
     db.session.add(m2)
     db.session.add(m3)
-    m1 = bookBorrow(name='球状闪电', borrowusr='赵怀真', borrownum=1, borrowdate='2023-01-12', shouldreturndate='2023-02-12')
+    m1 = bookBorrow(name='球状闪电', borrowusr='赵怀真', borrownum=1, borrowdate='2023-01-12', shouldreturndate='2023-02-12',ischecking=0,returnnum=0)
     m2 = bookBorrowHistory(name='球状闪电', borrowusr='赵怀真', borrowdate='2023-01-12', returndate='')
     m3 = bookDefaultRecord(name='球状闪电', borrowusr='赵怀真', borrowdate='2023-01-12', shouldreturndate='2023-02-12',
                            number=1, borrowtimestamp='1673481600000', ispayfine=0, isreturnbook=0)

@@ -320,9 +320,9 @@ const OkReturn = (props) => {
     };
 
     const handleCilck = async () => {
-        const self = window.localStorage.getItem('loggedUser')
+        // const self = window.localStorage.getItem('loggedUser')
         const newValue = {
-            borrowusr: self,
+            borrowusr: data.borrowusr,
             name: data.name,
             returnnum: data.returnnum,
             borrownum: 1,
@@ -363,9 +363,9 @@ const DenyReturn = (props) => {
 
     const handleCilck = async () => {
 
-        const self = window.localStorage.getItem('loggedUser')
+        // const self = window.localStorage.getItem('loggedUser')
         const newValue = {
-            borrowusr: self,
+            borrowusr: data.borrowusr,
             name: data.name,
             returnnum: data.returnnum,
         }

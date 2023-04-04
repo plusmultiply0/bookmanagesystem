@@ -185,10 +185,10 @@ const BorrowList = ()=>{
             params: res
         }).then(response => {
             const data = response.data
-            console.log(data)
+            // console.log(data)
             setBorrowData(data)
             const filterdata = data.filter((item) => item.ischecking==1)
-            console.log(filterdata)
+            // console.log(filterdata)
             setApplyBorrowData(filterdata)
         })
     }, [])
