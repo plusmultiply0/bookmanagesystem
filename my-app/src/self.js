@@ -370,7 +370,7 @@ const IdeaRelease = ()=>{
                 onFinish={onFinish}
             >
                 <Form.Item>
-                    <Title level={4}>个人想法</Title>
+                    <Title level={4}>个人座右铭</Title>
                 </Form.Item>
                 
                 <TextArea showCount maxLength={100} onChange={onChange} autoSize={{
