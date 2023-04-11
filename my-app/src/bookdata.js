@@ -72,7 +72,7 @@ const Borrow = (props)=>{
     const openNotificationWithIconDefault = (type) => {
         api[type]({
             message: '通知信息：',
-            description: '借阅失败！请先还书并缴纳罚金！',
+            description: '借阅失败！请先缴纳罚金并还书！',
         });
     };
 
@@ -164,11 +164,12 @@ const Borrow = (props)=>{
 
                 return { overduedays: diffdays, ...item }
             })
-            // 超期，包含缴纳和未缴纳罚款
+            // 超期，包含缴纳和未缴纳罚款，以及是否归还图书的
             datadefault = datadefault.filter(item => item.overduedays > 0)
 
-            // 过滤掉缴纳罚款的
-            datadefault = datadefault.filter(item => item.ispayfine == 0)
+            // 过滤掉归还图书的
+            // 未还书分为缴纳和未缴纳罚款
+            datadefault = datadefault.filter(item => item.isreturnbook==0)
 
             setDefaultData(datadefault)
         })

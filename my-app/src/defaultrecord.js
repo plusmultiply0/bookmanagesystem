@@ -156,24 +156,27 @@ const PayFine = (props) => {
 
     const handleClick = async() => {
         // 未还书，提示先还书
-        if (data.isreturnbook == 0) {
-            confirm({
-                title: '提示',
-                icon: <ExclamationCircleFilled />,
-                content: '缴纳罚金前，请将图书尽数归还！',
-                okText: '去还书',
-                cancelText: '取消',
-                onOk() {
-                    navigate('/home/borrowList')
-                },
-                onCancel() {
+        // if (data.isreturnbook == 0) {
+        //     confirm({
+        //         title: '提示',
+        //         icon: <ExclamationCircleFilled />,
+        //         content: '缴纳罚金前，请将图书尽数归还！',
+        //         okText: '去还书',
+        //         cancelText: '取消',
+        //         onOk() {
+        //             navigate('/home/borrowList')
+        //         },
+        //         onCancel() {
 
-                },
-            });
-        }else{
-            // 显示缴费表单
-            setVisible(true)
-        }
+        //         },
+        //     });
+        // }else{
+        //     // 显示缴费表单
+        //     setVisible(true)
+        // }
+
+        // 可以直接缴费
+        setVisible(true)
     }
 
     const finetext = payfine == 0 ? '缴纳罚金' : '已缴纳'

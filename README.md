@@ -148,9 +148,9 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ![](screenshot/mb2.png)
 
-审核用户的归还图书
+审核用户的归还图书，可以查看是否超期，超期天数，罚款是否缴纳
 
-![](screenshot/admin11.png)
+![](screenshot/admin12.png)
 
 书籍信息审核以及新增图书信息模块
 

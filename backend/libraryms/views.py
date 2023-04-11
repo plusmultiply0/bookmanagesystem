@@ -857,8 +857,13 @@ def usrborrowlistdata():
     res1 = bookBorrow.query.all()
     response = []
     for x in res1:
-        item = {"id":x.id,"key":x.id,"name":x.name,"borrowusr":x.borrowusr,"borrowdate":x.borrowdate,"borrownum":x.borrownum,"shouldreturndate":x.shouldreturndate,"ischecking":x.ischecking,"returnnum":x.returnnum}
-        response.append(item)
+        res2 = bookDefaultRecord.query.filter(bookDefaultRecord.borrowusr == x.borrowusr).all()
+        for y in res2:
+            if y.name == x.name:
+                item = {"id":x.id,"key":x.id,"name":x.name,"borrowusr":x.borrowusr,"borrowdate":x.borrowdate,"borrownum":x.borrownum,
+                        "shouldreturndate":x.shouldreturndate,"ischecking":x.ischecking,"returnnum":x.returnnum,
+                        "ispayfine":y.ispayfine,"borrowtimestamp":y.borrowtimestamp}
+                response.append(item)
     # print(response)
     return response
 

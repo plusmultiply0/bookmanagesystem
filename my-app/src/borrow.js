@@ -1,5 +1,7 @@
 import { Space, notification, Button, Table, Empty, ConfigProvider, Typography, Modal } from 'antd'
+import { LaptopOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from 'axios'
 
 const { Title } = Typography;
@@ -79,6 +81,8 @@ const applyBorrowColumns = [
     // },
 ]
 
+const { confirm } = Modal;
+
 const uniPost = async (url, res) => {
     const response = await axios.post(url, res)
     // console.log('response.data:',response.data)
@@ -118,6 +122,9 @@ const Return = (props) => {
     const data = props.data
     const [isReturn, setReturn] = useState(true);
     const [api, contextHolder] = notification.useNotification();
+
+    const navigate = useNavigate();
+
     const openNotificationWithIcon = (type) => {
         api[type]({
             message: '通知信息：',
@@ -140,18 +147,45 @@ const Return = (props) => {
             returndate: getCurrentTime(false),
             timestamp: new Date().getTime()
         }
+
+        // 还书前，提示缴纳罚金
+        confirm({
+                title: '提示',
+                icon: <ExclamationCircleFilled />,
+                content: '还书前，请将超期罚金尽数缴纳！',
+                okText: '去缴纳罚款',
+                cancelText: '继续还书',
+                onOk() {
+                    navigate('/home/defaultRecord')
+                },
+                async onCancel() {
+                    // 借阅数量为0时，提示失败
+                    if (data.borrownum < 1) {
+                        openNotificationWithIconError('error')
+                        return;
+                    }
+
+                    // console.log(newValue)
+                    const res1 = await uniPost('http://127.0.0.1:5000/beforetoreturn', newValue)
+                    // console.log('res1', res1)
+                    openNotificationWithIcon(isReturn ? 'success' : 'error')
+
+                    setTimeout(() => { window.location.reload() }, 3000)
+                },
+            });
+
         // 借阅数量为0时，提示失败
-        if (data.borrownum<1){
-            openNotificationWithIconError('error')
-            return;
-        }
+        // if (data.borrownum<1){
+        //     openNotificationWithIconError('error')
+        //     return;
+        // }
 
-        // console.log(newValue)
-        const res1 = await uniPost('http://127.0.0.1:5000/beforetoreturn', newValue)
-        // console.log('res1', res1)
-        openNotificationWithIcon(isReturn ? 'success' : 'error')
+        // // console.log(newValue)
+        // const res1 = await uniPost('http://127.0.0.1:5000/beforetoreturn', newValue)
+        // // console.log('res1', res1)
+        // openNotificationWithIcon(isReturn ? 'success' : 'error')
 
-        setTimeout(() => { window.location.reload() }, 3000)
+        // setTimeout(() => { window.location.reload() }, 3000)
     }
 
     const buttontext = data.ischecking == -1 ? '再次归还' :'归还'

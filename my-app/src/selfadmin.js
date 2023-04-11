@@ -123,11 +123,24 @@ const applyBorrowColumns = [
         dataIndex: 'borrowdate',
         key: 'borrowdate',
     },
-    // {
-    //     title: '归还日期',
-    //     dataIndex: 'shouldreturndate',
-    //     key: 'shouldreturndate',
-    // },
+    {
+        title: '是否超期',
+        dataIndex: 'isoverdue',
+        key: 'isoverdue',
+        render: (data) => data? '是' : '否'
+    },
+    {
+        title: '超期天数',
+        dataIndex: 'overduedays',
+        key: 'overduedays',
+        render: (data) => data > 0 ? data : 0
+    },
+    {
+        title: '是否缴纳过罚款',
+        dataIndex: 'ispayfine',
+        key: 'ispayfine',
+        render: (data) => data > 0 ? '是' : '否'
+    },
     {
         title: '操作',
         key: 'action',
@@ -199,9 +212,27 @@ const InfoCheck = () => {
         })
         axios.get('http://127.0.0.1:5000/usrborrowlistdata').then(response => {
             const data = response.data
-            const filterdata = data.filter((item) => item.ischecking == 1)
+            let filterdata = data.filter((item) => item.ischecking == 1)
             // console.log('new book data:', data)
+
+            // 计算是否超期
+            const nowtime = new Date().getTime()
+
+            filterdata = filterdata.map(item => {
+                // 判断是否还书
+                let diff;
+
+                diff = nowtime - item.borrowtimestamp
+
+                const diffdays = Math.round(diff / 3600 / 1000 / 24) - 31
+
+                const isoverdue = diffdays > 0 ? true : false 
+                
+                return { isoverdue, overduedays: diffdays, ...item }
+            })
+
             setApplyBorrowData(filterdata)
+            // console.log(filterdata);
         })
 
     }, [])
