@@ -192,15 +192,13 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ![](screenshot/default1.png)
 
-缴纳罚金前需要将书籍尽数归还
+还书前，缴纳罚金可以使还书审批更容易通过
 
-![](screenshot/default2.png)
-
-恢复正常借书功能，除了尽数还书外，还需要缴纳罚款
+恢复正常借书功能，除了缴纳罚款外，还需要尽数还书
 
 ![](screenshot/default4.png)
 
-超期未缴纳罚金时，限制借书
+超期未缴纳罚金或未还书时，限制借书
 
 ![](screenshot/default3.png)
 
