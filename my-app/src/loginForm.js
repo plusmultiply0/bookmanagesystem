@@ -1,9 +1,12 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Alert} from 'antd';
 import axios from 'axios';
-import { useState } from 'react';
-
+import { useState, useRef } from 'react';
 import { Link, Navigate } from "react-router-dom";
+
+import SliderCaptcha from 'rc-slider-captcha';
+import createPuzzle from 'create-puzzle';
+import DemoImage from './images/captcha2.jpg';
 
 const baseUrl = 'http://127.0.0.1:5000/login'
 
@@ -11,6 +14,11 @@ const LoginForm = () => {
 
     const [isAlertShow, setAlertShow] = useState(false)
     const [islogged,setlogged] = useState(false)
+
+    const [visible, setVisible] = useState(false);
+    const [duration, setDuration] = useState(0);
+    const [result,setResult] = useState(false);
+    const [captchaAlert,setCaptchaAlert] = useState(false);
 
     // 登录post函数
     const ifLogin = async res =>{
@@ -22,6 +30,13 @@ const LoginForm = () => {
     const onFinish = async (values) => {
         // console.log('Received values of form: ', values);
         try{
+            // 
+            if (!result){
+                setCaptchaAlert(true);
+                setTimeout(() => { setCaptchaAlert(false) }, 2000)
+                return;
+            }
+
             const res1 = await ifLogin(values)
             // console.log('res1:',res1)
             // console.log(res1.access_token)
@@ -41,6 +56,17 @@ const LoginForm = () => {
             setTimeout(()=>{setAlertShow(false)},3000)
         }
     };
+
+    const offsetXRef = useRef(0);
+
+    const waitTime = ()=>{
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, 1000);
+        });
+    }
+
     return (
         <>
             {isAlertShow?<Alert
@@ -51,6 +77,14 @@ const LoginForm = () => {
                 showIcon
                 closable
             />:''}
+            {captchaAlert ? <Alert
+                className='loginalert'
+                message="Error"
+                description="滑块验证错误！请再次尝试！"
+                type="error"
+                showIcon
+                closable
+            /> : ''}
             {
                 islogged && <Navigate to="/home/bookList" replace={true} />
             }
@@ -95,6 +129,46 @@ const LoginForm = () => {
                     <Form.Item name="isAdmin" valuePropName="checked" noStyle>
                         <Checkbox>是否为管理员</Checkbox>
                     </Form.Item>
+                </Form.Item>
+                
+                <Form.Item>
+                    <SliderCaptcha
+                        request={() =>
+                            createPuzzle(DemoImage).then(async (res) => {
+                                offsetXRef.current = res.x;
+                                await waitTime();
+                                return {
+                                    bgUrl: res.bgUrl,
+                                    puzzleUrl: res.puzzleUrl
+                                };
+                            })
+                        }
+                        onVerify={async (data) => {
+                            await waitTime();
+                            // console.log(data);
+                            if (data.x >= offsetXRef.current - 5 && data.x < offsetXRef.current + 5) {
+                                setDuration(data.duration);
+                                setVisible(true);
+                                await waitTime();
+                                setResult(true);
+                                return Promise.resolve();
+                            }
+                            return Promise.reject();
+                        }}
+                        bgSize={{
+                            width: 250,
+                            height: 110
+                        }}
+                        mode="float"
+                        limitErrorCount={3}
+                        jigsawContent={
+                            visible && (
+                                <div className={"successTip"}>
+                                    {Number((duration / 1000).toFixed(2))}秒内完成，打败了98%用户
+                                </div>
+                            )
+                        }
+                    />
                 </Form.Item>
 
                 <Form.Item>

@@ -21,7 +21,7 @@
 
 .loginform{
   width: 320px;
-  height: 340px;
+  height: 400px;
   padding: 36px;
   margin-top: -200px;
   background-color: white;
@@ -170,4 +170,18 @@
 .carousel{
   /* text-align: center; */
   width: 25%;
+}
+
+.successTip{
+  position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 2px 5px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    background-color: #43a047;
 }
