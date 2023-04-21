@@ -36,7 +36,7 @@
 - 丰富且较完备的提示信息
 - 提供预览界面（随便逛逛）搜索查看图书信息
 - 图书超期未还会被记录，超期需缴纳罚款并且限制借书
-- 登录页添加滑块验证
+- 登录页添加滑块验证，3次登录失败后，账号会被锁定一段时间
 
 
 
@@ -81,9 +81,23 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ![](screenshot/3.png)
 
-登录及注册页
+登录页
 
 ![](screenshot/login.png)
+
+滑块验证码
+
+![](screenshot/login2.png)
+
+登录错误会有提示
+
+![](screenshot/login3.png)
+
+登录失败累计3次，账号会被锁定一段时间
+
+![](screenshot/login4.png)
+
+注册页
 
 ![](screenshot/register.png)
 

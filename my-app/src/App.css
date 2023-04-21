@@ -21,7 +21,7 @@
 
 .loginform{
   width: 320px;
-  height: 400px;
+  height: auto;
   padding: 36px;
   margin-top: -200px;
   background-color: white;
