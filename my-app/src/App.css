@@ -185,3 +185,15 @@
     text-align: center;
     background-color: #43a047;
 }
+
+.filehover:hover{
+  color: #1890FF;
+  cursor: pointer;
+}
+.filehover{
+  margin-left: 15px;
+}
+
+.ant-upload-list-item {
+  width: 250px;
+}

@@ -652,6 +652,42 @@ def settopmbcomment():
     db.session.commit()
     return jsonify({"msg": "un/set top comment ok！"})
 
+# 留言板图片功能
+@app.route('/mbuploadimages', methods=["POST"])
+@cross_origin()
+def mbuploadimages():
+    file = request.files['file']
+    _, ext = os.path.splitext(file.filename)
+    new_filename = _ + ext
+    # 获取当前文件所在的目录
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 拼接图片文件路径
+    file_path = os.path.join(current_dir, '..','mbpics', new_filename)
+    frontfilepath = 'http://127.0.0.1:5000/mbimages/'+new_filename
+    if file:
+        file.save(file_path)
+        return jsonify({'success': True, 'url': frontfilepath})
+    else:
+        return jsonify({'success': False})
+
+@app.route('/deletembpic/<filename>', methods=['DELETE'])
+@cross_origin()
+def delete_image(filename):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, '..', 'mbpics', filename)
+    os.remove(file_path)
+    return {'msg': 'success'}
+
+# 用于留言板图片显示
+@app.route('/mbimages/<filename>')
+def get_mb_image(filename):
+    # 获取当前文件所在的目录
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 拼接图片文件路径
+    file_path = os.path.join(current_dir, '..','mbpics', filename)
+    # 使用 Flask 的 send_file 函数来返回图片
+    return send_file(file_path, mimetype='image/jpeg')
+
 # 热门排行
 @app.route('/hotborrowdata', methods=["GET"])
 @cross_origin()

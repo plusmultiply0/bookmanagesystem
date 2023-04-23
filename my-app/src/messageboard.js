@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Descriptions, Button, Modal, Form, Input, Typography, List, Skeleton, message, Space, Row, Col, Tag } from 'antd';
-import { LaptopOutlined, SmileOutlined, BookOutlined, AppstoreOutlined, LikeOutlined, LikeFilled, DeleteOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { Descriptions, Button, Modal, Form, Input, Typography, List, Skeleton, message, Space, Row, Col, Tag, Upload, Image } from 'antd';
+import { LaptopOutlined, SmileOutlined, BookOutlined, PictureOutlined, LikeOutlined, LikeFilled, DeleteOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import axios from 'axios'
 
 const { TextArea } = Input;
@@ -123,6 +123,7 @@ const MessageBoard = ()=>{
     const [text, setText] = useState('')
 
     const [comments, setComments] = useState([])
+    const [fileList, setFileList] = useState([])
 
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -144,10 +145,7 @@ const MessageBoard = ()=>{
 
     const handleClick = async (e)=>{
         const self = window.localStorage.getItem('loggedUser')
-        const newValue = {
-            username: self,
-            text: text,
-        }
+
         // 保存父评论
         const newcomment = {
             id: comments.length+1,
@@ -163,6 +161,7 @@ const MessageBoard = ()=>{
         setComments([newcomment, ...comments])
         // console.log(newcomment)
         setText('')
+        setFileList([])
         // 添加类别，便于后端识别
         const sendComment = { ...newcomment, type:'parent'}
 
@@ -187,10 +186,61 @@ const MessageBoard = ()=>{
             {/* 表情组件 */}
             <MyEmoji text={text} setText={setText}/>
             {/* 结束 */}
+            <PicUpload text={text} setText={setText} fileList={fileList} setFileList={setFileList}/>
             <br />
             <Button type='primary' className='mbbutton' htmlType="submit" onClick={handleClick}>提交</Button>
             <Title>过往留言</Title>
             <MyComment item={comments} comments={comments} setComments={setComments}/>
+        </>
+    )
+}
+
+const PicUpload = (props)=>{
+
+    let text = props.text
+    let setText = props.setText
+    let fileList = props.fileList
+    let setFileList = props.setFileList
+
+    const handleChange = (info) => {
+
+        let newFileList = [...info.fileList];
+        newFileList = newFileList.slice(-1);
+        setFileList(newFileList);
+
+        if (info.file.status !== 'uploading') {
+            console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+            const regex = /\[img\](.*?)\[\/img\]/g
+            const frontimgpath = `[img]${info.file.name}[/img]`
+            const newstring = text.replace(regex, (match, p1) => '');
+            setText(newstring +frontimgpath)
+            message.success(`${info.file.name} 上传成功！`);
+        } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} 上传失败！`);
+        }
+    }
+
+    const handleRemovePics = async(file)=>{
+        // console.log('do')
+        const response = await axios.delete(`http://127.0.0.1:5000/deletembpic/${file.name}`); // 以文件名为参数发送删除请求
+        // console.log(response.data.msg)
+        if (response.data.msg == "success"){
+            message.success('删除成功！');
+        }else{
+            message.error('删除失败！');
+        }
+    }
+
+    return(
+        <>
+            <Upload action="http://127.0.0.1:5000/mbuploadimages" 
+                onRemove={handleRemovePics} onChange={handleChange} fileList={fileList}>
+                <Space className='filehover'>
+                    <PictureOutlined />图片
+                </Space>
+            </Upload>
         </>
     )
 }
@@ -512,7 +562,9 @@ const BaseComemnt = (props)=>{
                 {
                     isAdmin && <span className='settop' onClick={handlesettop}>{topstate==1?'取消置顶':'置顶'}</span>
                 }
-                <div className='parentcontent'>{state.content}</div>
+                <div className='parentcontent'>
+                    <NewContent content={state.content}/>
+                </div>
                 <div>
                     <span className='likeicon' onClick={handlelikeclick}>
                         {click ? <LikeFilled /> : <LikeOutlined />}
@@ -554,6 +606,38 @@ const BaseComemnt = (props)=>{
                     state.fromId && <hr className="hr-edge-weak"></hr>
             }
         </div>
+        </>
+    )
+}
+
+
+const NewContent = (props) => {
+
+    const content = props.content
+
+    console.log(content)
+
+    const imgTagStart = '[img]';
+    const imgTagEnd = '[/img]';
+    const imgIndexStart = content.indexOf(imgTagStart);
+    // console.log(imgIndexStart)
+    const imgIndexEnd = content.indexOf(imgTagEnd);
+    const imgSrc = content.slice(imgIndexStart + imgTagStart.length, imgIndexEnd);
+    const textBeforeImg = content.slice(0, imgIndexStart);
+    const textAfterImg = content.slice(imgIndexEnd + imgTagEnd.length);
+
+    return (
+        imgIndexStart==-1?
+        <>
+            {content}
+        </>
+        :
+        <>
+            {textBeforeImg}
+            <div>
+                <Image src={'http://127.0.0.1:5000/mbimages/' + imgSrc} width={200}/>
+            </div>
+            {textAfterImg}
         </>
     )
 }
