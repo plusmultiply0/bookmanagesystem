@@ -55,7 +55,6 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 5. 在前面的虚拟环境中，先运行<code>flask initdb</code> 初始化数据库，再运行<code>flask build</code> 填充预置数据，最后运行<code>flask run</code>，在 http://127.0.0.1:5000/ 查看项目（若出现重复数据，运行<code>flask initdb --drop</code> ，再运行<code>flask build</code>）
 6. 预设的管理员账号是<code>zzc</code>，普通账号有<code>zjc,abc,赵怀真,沈梦溪，asd，海月，test</code>，密码都是<code>123456</code>。
-7. 修改前端代码前，请先在 my-app 目录下<code>npm install</code>，然后运行<code>npm start</code>，在http://127.0.0.1:3000/ 查看项目
 
 
 

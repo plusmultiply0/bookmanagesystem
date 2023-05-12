@@ -227,6 +227,9 @@ const PicUpload = (props)=>{
         const response = await axios.delete(`http://127.0.0.1:5000/deletembpic/${file.name}`); // 以文件名为参数发送删除请求
         // console.log(response.data.msg)
         if (response.data.msg == "success"){
+            const regex = /\[img\](.*?)\[\/img\]/g
+            const newstring = text.replace(regex, (match, p1) => '');
+            setText(newstring)
             message.success('删除成功！');
         }else{
             message.error('删除失败！');
