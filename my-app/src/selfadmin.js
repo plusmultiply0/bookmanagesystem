@@ -693,6 +693,9 @@ const ReaderManage = () => {
         label: {
             type: 'outer',
             content: '{name} {percentage}',
+            style: {
+                fontSize: 18, // 设置文字大小
+            },
         },
         interactions: [
             {
@@ -729,12 +732,18 @@ const ReaderManage = () => {
                 
             },
             offset: 10,
+            style: {
+                fontSize: 18, // 设置文字大小
+            },
         },
         legend: false,
         xAxis: {
             label: {
                 autoHide: true,
                 autoRotate: false,
+                style: {
+                    fontSize: 18, // 设置文字大小
+                },
             },
         },
     };
@@ -761,12 +770,18 @@ const ReaderManage = () => {
 
             },
             offset: 10,
+            style: {
+                fontSize: 18, // 设置文字大小
+            },
         },
         legend: false,
         xAxis: {
             label: {
                 autoHide: true,
                 autoRotate: false,
+                style: {
+                    fontSize: 18, // 设置文字大小
+                },
             },
         },
     };
