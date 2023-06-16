@@ -218,6 +218,10 @@ SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ![](screenshot/default3.png)
 
+## 赞赏与支持
+
+![](other/rewardqrcode.png)
+
 ## 参考资料
 
 - https://ant.design/components/overview-cn

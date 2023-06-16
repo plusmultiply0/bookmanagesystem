@@ -63,7 +63,6 @@ def login():
     if isadmin:
         # 先查找用户名是否存在
         res1 = adminusr.query.filter(adminusr.username==username).first()
-        # print(res1)
         if not res1:
             return jsonify({"msg": "用户名错误"}), 401
         else:
@@ -74,7 +73,6 @@ def login():
     else:
         # 先查找用户名是否存在
         res1 = normalusr.query.filter(normalusr.username == username).first()
-        # print(res1)
         if not res1:
             return jsonify({"msg": "用户名错误"}), 401
         else:
